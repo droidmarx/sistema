@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -15,7 +16,9 @@ module.exports = async (req, res) => {
 
   // Valida usuário e hash da senha
   if (users[username] && users[username] === passwordHash) {
-    return res.status(200).json({ success: true });
+    // Gera JWT com expiração de 1 hora
+    const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return res.status(200).json({ success: true, token });
   }
 
   return res.status(401).json({ success: false, error: 'Usuário ou senha inválidos' });
