@@ -842,6 +842,9 @@
     </style>
 </head>
 <body>
+    
+    <button id="logoutButton" class="mt-4 bg-red-600 text-white p-2 rounded-md hover:bg-red-700 transition">Sair</button>
+    
     <div id="summary" class="animate-on-scroll">
         <div class="summary-card">
             <h3>Total de Clientes</h3>
@@ -855,6 +858,7 @@
 
        <!-- Gráfico -->
     <canvas id="clientsChart" style="max-width: 600px; margin: 20px auto;"></canvas>
+    
 
     <div class="top-actions animate-on-scroll">
         <button id="new-client-btn" onclick="openModal()">
@@ -1597,5 +1601,47 @@
             });
         }
     </script>
+    
+      <script>
+    // Função para verificar o token
+    async function verifyToken() {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        });
+
+        const result = await response.json();
+        if (!result.valid) {
+          localStorage.removeItem('authToken');
+          window.location.href = 'index.html';
+        } else {
+          // Token válido, exibe nome do usuário (opcional)
+          document.querySelector('p').textContent = `Você está logado como ${result.username}.`;
+        }
+      } catch (error) {
+        console.error('Erro ao verificar token:', error);
+        localStorage.removeItem('authToken');
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Verifica o token ao carregar a página
+    verifyToken();
+
+    // Logout
+    document.getElementById('logoutButton').addEventListener('click', () => {
+      localStorage.removeItem('authToken');
+      window.location.href = 'index.html';
+    });
+  </script>
+    
 </body>
 </html>
