@@ -1,0 +1,7 @@
+{
+  "name": "login-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  }
+}
