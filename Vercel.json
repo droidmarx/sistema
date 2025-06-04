@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api" },
+    { "src": "/sistema.html", "dest": "/sistema.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
