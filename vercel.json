@@ -1,7 +1,8 @@
 {
   "version": 2,
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api" },
+    { "src": "/api/auth", "dest": "/api/auth.js" },
+    { "src": "/api/verify", "dest": "/api/verify.js" },
     { "src": "/sistema.html", "dest": "/sistema.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
