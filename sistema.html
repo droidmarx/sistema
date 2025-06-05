@@ -1623,9 +1623,9 @@
   }
 
   // Função para atualizar a mensagem de boas-vindas
-  function updateWelcomeMessage(username) {
+  function updateWelcomeMessage(fullName) {
     document.getElementById('welcomeMessage').textContent = 
-      `Bem vindo ${username} - ${formatDateTime()}`;
+      `Bem vindo ${fullName} - ${formatDateTime()}`;
   }
 
   // Função para verificar o token
@@ -1648,9 +1648,9 @@
         localStorage.removeItem('authToken');
         window.location.href = 'index.html';
       } else {
-        // Token válido, inicia a atualização em tempo real
-        updateWelcomeMessage(result.username);
-        setInterval(() => updateWelcomeMessage(result.username), 1000);
+        // Token válido, inicia a atualização em tempo real com o nome completo
+        updateWelcomeMessage(result.fullName);
+        setInterval(() => updateWelcomeMessage(result.fullName), 1000);
       }
     } catch (error) {
       console.error('Erro ao verificar token:', error);
