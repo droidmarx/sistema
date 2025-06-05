@@ -12,10 +12,17 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // Verifica o token com a chave secreta
+    // Verifica o token usando a chave secreta
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return res.status(200).json({ valid: true, username: decoded.username });
+    
+    // Retorna valid: true e os dados do payload (username e fullName)
+    return res.status(200).json({
+      valid: true,
+      username: decoded.username,
+      fullName: decoded.fullName
+    });
   } catch (error) {
+    console.error('Erro ao verificar token:', error);
     return res.status(401).json({ valid: false, error: 'Token inválido ou expirado' });
   }
 };
