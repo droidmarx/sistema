@@ -10,14 +10,18 @@ module.exports = async (req, res) => {
 
   // Carrega hashes das senhas das variáveis de ambiente
   const users = {
-    'Guilherme': process.env.HASH_GUI,
-    'Tayna': process.env.HASH_TAYNA
+    'Gui': { hash: process.env.HASH_GUI, fullName: 'Guilherme Marques' },
+    'Tayna': { hash: process.env.HASH_TAYNA, fullName: 'Tayná Ortiz' }
   };
 
   // Valida usuário e hash da senha
-  if (users[username] && users[username] === passwordHash) {
-    // Gera JWT com expiração de 1 hora
-    const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  if (users[username] && users[username].hash === passwordHash) {
+    // Gera JWT com expiração de 1 hora, incluindo o nome completo
+    const token = jwt.sign(
+      { username, fullName: users[username].fullName },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
     return res.status(200).json({ success: true, token });
   }
 
