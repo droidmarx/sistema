@@ -10,8 +10,8 @@ module.exports = async (req, res) => {
 
   // Carrega hashes das senhas das variáveis de ambiente
   const users = {
-    'Gui': process.env.HASH_GUI,
-    'Tayná': process.env.HASH_TAYNA
+    'Guilherme': process.env.HASH_GUI,
+    'Tayna': process.env.HASH_TAYNA
   };
 
   // Valida usuário e hash da senha
