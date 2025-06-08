@@ -530,7 +530,10 @@ body {
     color: var(--border-color);
 }
 
-
+#currentDateTime {
+    font-size: 1em;
+    color: var(--text-color);
+}
 
 #themeToggleBtn {
     background: transparent;
@@ -783,7 +786,7 @@ body {
     <div class="top-right-actions">
         <div class="left-info">
             <span id="welcomeMessage">Bem-vindo, Usuário!</span>
-
+            <span id="currentDateTime"></span>
         </div>
         <div class="right-buttons">
             <button id="themeToggleBtn" onclick="toggleTheme()" aria-label="Alternar para tema escuro">
@@ -874,4 +877,723 @@ body {
                     <div class="input-group">
                         <i class="fas fa-tv"></i>
                         <input type="text" id="tela" placeholder="Tela">
-           
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-percent"></i>
+                        <input type="number" id="desconto" placeholder="Desconto (%)">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-dollar-sign"></i>
+                        <input type="number" id="valor" placeholder="Valor" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-comment-sms"></i>
+                        <input type="text" id="whats" placeholder="WhatsApp" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-server"></i>
+                        <select id="painel" required>
+                            <option value="">Selecione um painel</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-network-wired"></i>
+                        <input type="text" id="mac" placeholder="MAC">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-key"></i>
+                        <input type="text" id="safekey" placeholder="SafeKey">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-comment"></i>
+                        <textarea id="observacoes" placeholder="Observações"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-calendar"></i>
+                        <input type="date" id="vencimento" required>
+                    </div>
+                    <button type="submit"><i class="fas fa-check"></i> Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Gerenciamento de Painéis -->
+    <div id="panelManagerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Gerenciar Painéis</h2>
+                <i class="fas fa-times close-btn" onclick="closePanelManager()"></i>
+            </div>
+            <div class="modal-body">
+                <form id="panelForm">
+                    <input type="hidden" id="panelId">
+                    <div class="panel-form-grid">
+                        <div class="input-group">
+                            <i class="fas fa-tag"></i>
+                            <input type="text" id="panelName" placeholder="Nome do Painel" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-link"></i>
+                            <input type="url" id="panelLink" placeholder="Link do Painel" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-comment-alt"></i>
+                            <input type="text" id="panelDescription" placeholder="Descrição (opcional)">
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-toggle-on"></i>
+                            <select id="panelStatus" required>
+                                <option value="active">Ativo</option>
+                                <option value="inactive">Inativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit"><i class="fas fa-save"></i> Salvar Painel</button>
+                </form>
+                <ul id="panelList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Configuração de Mensagens do WhatsApp -->
+    <div id="whatsappMessagesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Configurar Mensagens do WhatsApp</h2>
+                <i class="fas fa-times close-btn" onclick="closeWhatsAppMessagesModal()"></i>
+            </div>
+            <div class="modal-body">
+                <div class="variables-info">
+                    <h3>Variáveis Disponíveis</h3>
+                    <ul>
+                        <li><code>{cliente}</code>: Nome do cliente</li>
+                        <li><code>{valor}</code>: Valor do plano</li>
+                        <li><code>{vencimento}</code>: Data de vencimento (DD/MM/AAAA)</li>
+                    </ul>
+                </div>
+                <form id="whatsappMessagesForm">
+                    <div class="input-group">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <textarea id="dueMessage" placeholder="Mensagem de vencimento" required rows="5"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-sync"></i>
+                        <textarea id="renewalMessage" placeholder="Mensagem de renovação" required rows="5"></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit"><i class="fas fa-save"></i> Salvar Mensagens</button>
+                        <button type="button" id="applyMessagesBtn"><i class="fas fa-check"></i> Aplicar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        const API_URL = "https://66d39f5c184dce1713d09736.mockapi.io/Api/v1/clientes";
+const PANELS_API_URL = "https://66d39f5c184dce1713d09736.mockapi.io/Api/v1/paineis";
+let clients = [];
+let editingIndex = null;
+let openDetail = null;
+let isSaving = false;
+
+const DEFAULT_DUE_MESSAGE = `Olá {cliente}, tudo bem? 😊\n\n🚨 Para evitar qualquer interrupção no seu acesso, *lembramos que seu plano vence em {vencimento} às 23:59.*\n\n📅 Faça o pagamento de R$ {valor} via Pix para o número 11915370708.\n\n💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!\n\nAgradecemos pela confiança! 💙`;
+const DEFAULT_RENEWAL_MESSAGE = `Olá {cliente}!\n\n✅ Seu plano foi renovado com sucesso!\n\n📅 *Próximo vencimento: {vencimento}.*\n\n💳 Qualquer dúvida, é só chamar!`;
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadClients();
+    setupFilters();
+    fetchPanels();
+    loadTheme();
+    updateThemeIcon();
+    loadWhatsAppMessages();
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+    setupWhatsAppMessagesForm();
+});
+
+function updateDateTime() {
+    const now = new Date();
+    const formattedDateTime = now.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZone: 'America/Sao_Paulo'
+    });
+    document.getElementById('currentDateTime').textContent = formattedDateTime;
+}
+
+const form = document.getElementById("clientForm");
+const clientTable = document.getElementById("clientTable");
+const searchInput = document.getElementById("search");
+const categories = document.getElementById("categories");
+const todosGroup = document.getElementById("todos-group");
+const themeToggleBtn = document.getElementById("themeToggleBtn");
+
+async function loadClients() {
+    clientTable.querySelectorAll(".group-content").forEach(group => {
+        group.innerHTML = '<div style="padding: 12px 16px"><div class="loader"></div></div>';
+    });
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+        clients = await response.json();
+        clients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+        renderClients(clients);
+    } catch (e) {
+        console.error("Erro ao carregar os clientes:", e);
+        clientTable.querySelectorAll(".group-content").forEach(group => {
+            group.innerHTML = '<div style="padding: 16px">Erro ao carregar os dados.</div>';
+        });
+        showToast("Erro ao carregar os clientes.", "error");
+    }
+}
+
+async function renderClients(clients) {
+    const paineis = await fetchPaineis();
+    const vencidosGroup = document.getElementById("vencidos-group");
+    const vencendoGroup = document.getElementById("vencendo-group");
+    const emDiaGroup = document.getElementById("em-dia-group");
+    const todosContent = document.getElementById("todos-content");
+
+    vencidosGroup.innerHTML = "";
+    vencendoGroup.innerHTML = "";
+    emDiaGroup.innerHTML = "";
+    todosContent.innerHTML = "";
+
+    const now = new Date();
+    const vencidos = [];
+    const vencendo = [];
+    const emDia = [];
+
+    clients.forEach(client => {
+        const dueDate = new Date(client.vencimento);
+        const daysDiff = Math.round((dueDate - now) / (1000 * 60 * 60 * 24));
+        if (daysDiff < 0) {
+            vencidos.push(client);
+        } else if (daysDiff <= 3) {
+            vencendo.push(client);
+        } else {
+            emDia.push(client);
+        }
+    });
+
+    document.getElementById("vencidos-count").textContent = vencidos.length;
+    document.getElementById("vencendo-count").textContent = vencendo.length;
+    document.getElementById("em-dia-count").textContent = emDia.length;
+
+    const renderClient = (client, isSearch = false) => {
+        const dueDate = new Date(client.vencimento);
+        const daysDiff = Math.round((dueDate - now) / (1000 * 60 * 60 * 24));
+        const formattedDate = formatDate(client.vencimento);
+        const dueMessage = getWhatsAppMessage("due", client);
+        const foundPanel = paineis.find(p => p.id === client.painel);
+        const actionButtons = daysDiff <= 3 ? `
+            <a href="https://wa.me/55${client.whats}?text=${encodeURIComponent(dueMessage)}" target="_blank" class="whatsapp-btn" aria-label="Enviar lembrete de vencimento via WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" onclick="renewClient('${client.id}'); return false;" class="renew-btn" aria-label="Renovar cliente"><i class="fas fa-sync"></i></a>
+        ` : '';
+
+        return `
+            <div class="client-row" ${!isSearch ? `onclick="toggleDetails('${client.id}')"` : ''}>
+                <div class="client-info">
+                    <span>${client.cliente}</span>
+                    <span class="due-date">Vence: ${formattedDate}</span>
+                </div>
+                <div class="client-actions">${actionButtons}</div>
+            </div>
+            <div id="details-${client.id}" class="client-details ${isSearch ? 'open' : ''}">
+                <p><strong>Tela:</strong> ${client.tela}</p>
+                <p><strong>Valor:</strong> R$ ${client.valor}</p>
+                <p><strong>Vencimento:</strong> ${formattedDate}</p>
+                <p><strong>Painel:</strong> ${foundPanel ? `<a href="${foundPanel.link}" target="_blank">${foundPanel.nome}</a>` : "Painel não encontrado"}</p>
+                <p><strong>MAC:</strong> ${client.mac || '-'} <br><strong>Key:</strong> ${client.safekey || '-'}</p>
+                <p><strong>Observações:</strong><br><textarea readonly>${client.observacoes || '-'}</textarea></p>
+                <div class="actions">
+                    <button onclick="openModal('${client.id}')"><i class="fas fa-edit"></i> Editar</button>
+                    <button onclick="deleteClient('${client.id}')"><i class="fas fa-trash"></i> Excluir</button>
+                    <a href="https://wa.me/55${client.whats}" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                </div>
+            </div>`;
+    };
+
+    const renderGroup = (clients, container, isSearch = false) => {
+        clients.forEach(client => {
+            container.innerHTML += renderClient(client, isSearch);
+        });
+    };
+
+    renderGroup(vencidos, vencidosGroup);
+    renderGroup(vencendo, vencendoGroup);
+    renderGroup(emDia, emDiaGroup);
+
+    const searchTerm = searchInput.value.trim();
+    if (searchTerm !== '') {
+        categories.style.display = 'none';
+        todosGroup.style.display = 'block';
+        todosContent.classList.add('open');
+        const filteredClients = clients.filter(client => 
+            client.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            client.whats.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            client.painel.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        renderGroup(filteredClients, todosContent, true);
+    } else {
+        categories.style.display = 'block';
+        todosGroup.style.display = 'none';
+        todosContent.classList.remove('open');
+    }
+
+    renderSummary();
+    renderChart();
+}
+
+function getWhatsAppMessage(type, client) {
+    const messages = {
+        due: localStorage.getItem("dueMessage") || DEFAULT_DUE_MESSAGE,
+        renewal: localStorage.getItem("renewalMessage") || DEFAULT_RENEWAL_MESSAGE
+    };
+    const message = messages[type];
+    return message
+        .replace(/{cliente}/g, client.cliente)
+        .replace(/{valor}/g, client.valor)
+        .replace(/{vencimento}/g, formatDate(client.vencimento));
+}
+
+function validateMessage(message) {
+    const validVariables = ['{cliente}', '{valor}', '{vencimento}'];
+    const variableRegex = /\{[^}]+\}/g;
+    const foundMessages = message.match(variableRegex) || [];
+    const invalidMessages = foundMessages.filter(v => !validVariables.includes(v));
+    return invalidMessages;
+}
+
+async function fetchPaineis() {
+    try {
+        const response = await fetch(PANELS_API_URL);
+        if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+        return await response.json();
+    } catch (e) {
+        console.error("Erro ao buscar painéis:", e);
+        showToast("Erro ao buscar os painéis.", "error");
+        return [];
+    }
+}
+
+function toggleGroup(groupId) {
+    const group = document.getElementById(`${groupId}-group`) || document.getElementById("todos-content");
+    group.classList.toggle("open");
+    const header = document.querySelector(`.group-header.${groupId}`);
+    if (header) {
+        const icon = header.querySelector(".fas");
+        if (icon) {
+            icon.classList.toggle("fa-chevron-down");
+            icon.classList.toggle("fa-chevron-up");
+        }
+    }
+}
+
+function toggleDetails(clientId) {
+    const details = document.getElementById(`details-${clientId}`);
+    if (openDetail !== null && openDetail !== clientId) {
+        document.getElementById(`details-${openDetail}`).classList.remove("open");
+    }
+    details.classList.toggle("open");
+    openDetail = details.classList.contains("open") ? clientId : null;
+    event.stopPropagation();
+}
+
+function formatDate(dateStr) {
+    const date = new Date(dateStr + "T00:00:00");
+    return new Intl.DateTimeFormat("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        timeZone: "America/Sao_Paulo"
+    }).format(date);
+}
+
+function setupFilters() {
+    searchInput.addEventListener("input", () => {
+        renderClients(clients);
+    });
+}
+
+function openModal(clientId = null) {
+    document.getElementById("modalTitle").textContent = clientId ? "Editar Cliente" : "Novo Cliente";
+    if (clientId !== null) {
+        const client = clients.find(c => c.id === clientId);
+        if (!client) {
+            showToast("Cliente não encontrado!", "error");
+            return;
+        }
+        editingIndex = clients.findIndex(c => c.id === clientId);
+        Object.keys(client).forEach(key => {
+            const input = document.getElementById(key);
+            if (input) input.value = client[key];
+        });
+    } else {
+        editingIndex = null;
+        form.reset();
+    }
+    document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+}
+
+form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (isSaving) return;
+    isSaving = true;
+    await saveClient();
+    isSaving = false;
+    closeModal();
+});
+
+async function saveClient() {
+    const client = {
+        cliente: document.getElementById("cliente").value,
+        tela: document.getElementById("tela").value,
+        desconto: parseFloat(document.getElementById("desconto").value) || 0,
+        valor: parseFloat(document.getElementById("valor").value) || 0,
+        whats: document.getElementById("whats").value,
+        painel: document.getElementById("painel").value,
+        mac: document.getElementById("mac").value,
+        safekey: document.getElementById("safekey").value,
+        observacoes: document.getElementById("observacoes").value,
+        vencimento: document.getElementById("vencimento").value,
+    };
+    client.valor = (client.valor * (1 - client.desconto / 100)).toFixed(2);
+    if (isNaN(client.valor) || client.valor <= 0) {
+        showToast("Por favor, insira um valor válido!", "error");
+        return;
+    }
+    if (!client.cliente || !client.whats || !client.painel || !client.vencimento) {
+        showToast("Por favor, preencha todos os campos obrigatórios!", "error");
+        return;
+    }
+    try {
+        const method = editingIndex !== null ? 'PUT' : 'POST';
+        const url = editingIndex !== null ? `${API_URL}/${clients[editingIndex].id}` : API_URL;
+        const response = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(client)
+        });
+        if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+        showToast("Cliente salvo com sucesso!", "success");
+        await loadClients();
+    } catch (e) {
+        console.error('Erro ao salvar o cliente:', e);
+        showToast("Erro ao salvar o cliente!", "error");
+    }
+}
+
+async function deleteClient(clientId) {
+    if (!confirm("Tem certeza que deseja excluir? A exclusão será permanente!")) return;
+    try {
+        const response = await fetch(`${API_URL}/${clientId}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+        clients = clients.filter(client => client.id !== clientId);
+        renderClients(clients);
+        showToast("Cliente excluído com sucesso!", "success");
+    } catch (e) {
+        console.error("Erro ao excluir o cliente:", e);
+        showToast("Erro ao excluir o cliente!", "error");
+    }
+}
+
+async function renewClient(clientId) {
+    const client = clients.find(c => c.id === clientId);
+    if (!client) {
+        showToast("Cliente não encontrado!", "error");
+        return;
+    }
+    let monthsToAdd = prompt("Quantos meses deseja adicionar à renovação?", "1");
+    monthsToAdd = parseInt(monthsToAdd);
+    if (isNaN(monthsToAdd) || monthsToAdd <= 0) {
+        showToast("Por favor, insira um número válido de meses!", "error");
+        return;
+    }
+    let updatedClient = { ...client };
+    let currentDate = new Date(updatedClient.vencimento);
+    let originalDay = currentDate.getDate();
+    currentDate.setMonth(currentDate.getMonth() + monthsToAdd);
+    if (currentDate.getDate() !== originalDay) {
+        currentDate.setDate(0);
+    }
+    updatedClient.vencimento = currentDate.toISOString().split("T")[0];
+    try {
+        const response = await fetch(`${API_URL}/${updatedClient.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedClient)
+        });
+        if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+        await loadClients();
+        const renewalMessage = getWhatsAppMessage("renewal", updatedClient);
+        window.open(`https://wa.me/55${updatedClient.whats}?text=${encodeURIComponent(renewalMessage)}`, "_blank");
+        showToast("Cliente renovado com sucesso!", "success");
+    } catch (e) {
+        console.error("Erro ao renovar o cliente:", e);
+        showToast("Erro ao renovar o cliente!", "error");
+    }
+}
+
+function openPanelManager() {
+    document.getElementById('panelManagerModal').style.display = 'flex';
+    fetchPanels();
+}
+
+function closePanelManager() {
+    document.getElementById('panelManagerModal').style.display = 'none';
+}
+
+async function fetchPanels() {
+    try {
+        const response = await fetch(PANELS_API_URL);
+        if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+        const data = await response.json();
+        updatePanelList(data);
+        updatePanelSelect(data);
+    } catch (e) {
+        console.error("Erro ao buscar painéis:", e);
+        showToast("Erro ao buscar os painéis!", "error");
+    }
+}
+
+function updatePanelList(paineis) {
+    const panelList = document.getElementById('panelList');
+    panelList.innerHTML = "";
+    paineis.forEach(panel => {
+        const li = document.createElement('li');
+        li.classList.add("panel-item");
+        li.innerHTML = `
+            <span>${panel.nome} - <a href="${panel.link}" target="_blank">${panel.link}</a></span>
+            <button onclick="editPanel('${panel.id}', '${panel.nome}', '${panel.link}', '${panel.description || ''}', '${panel.status || 'active'}')"><i class="fas fa-edit"></i></button>
+            <button onclick="deletePanel('${panel.id}')"><i class="fas fa-trash"></i></button>
+        `;
+        panelList.appendChild(li);
+    });
+}
+
+function updatePanelSelect(paineis) {
+    const panelSelect = document.getElementById('painel');
+    panelSelect.innerHTML = `<option value="">Selecione um painel</option>`;
+    paineis.forEach(panel => {
+        const option = document.createElement('option');
+        option.value = panel.id;
+        option.textContent = panel.nome;
+        panelSelect.appendChild(option);
+    });
+}
+
+document.getElementById('panelForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const id = document.getElementById('panelId').value;
+    const nome = document.getElementById('panelName').value;
+    const link = document.getElementById('panelLink').value;
+    const description = document.getElementById('panelDescription').value;
+    const status = document.getElementById('panelStatus').value;
+    const panelData = { nome, link, description, status };
+    try {
+        const response = id
+            ? await fetch(`${PANELS_API_URL}/${id}`, {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(panelData),
+              })
+            : await fetch(PANELS_API_URL, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(panelData),
+              });
+        if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+        document.getElementById('panelForm').reset();
+        document.getElementById('panelId').value = '';
+        await fetchPanels();
+        showToast("Painel salvo com sucesso!", "success");
+    } catch (e) {
+        console.error("Erro ao salvar o painel:", e);
+        showToast("Erro ao salvar o painel!", "error");
+    }
+});
+
+function editPanel(id, nome, link, description = '', status = 'active') {
+    document.getElementById('panelId').value = id;
+    document.getElementById('panelName').value = nome;
+    document.getElementById('panelLink').value = link;
+    document.getElementById('panelDescription').value = description;
+    document.getElementById('panelStatus').value = status;
+}
+
+async function deletePanel(id) {
+    if (!confirm("Você tem certeza de que deseja excluir este painel?")) return;
+    try {
+        const response = await fetch(`${PANELS_API_URL}/${id}`, { method: "DELETE" });
+        if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+        await fetchPanels();
+        showToast("Painel excluído com sucesso!", "success");
+    } catch (e) {
+        console.error("Erro ao excluir o painel:", e);
+        showToast("Erro ao excluir o painel!", "error");
+    }
+}
+
+function renderSummary() {
+    const totalClients = clients.length;
+    const totalValue = clients.reduce((sum, client) => sum + parseFloat(client.valor || 0), 0).toFixed(2);
+    document.getElementById("totalClients").textContent = totalClients;
+    document.getElementById("totalValue").textContent = `R$ ${totalValue}`;
+}
+
+function renderChart() {
+    if (typeof Chart === 'undefined') {
+        console.error("Chart.js não está carregado!");
+        showToast("Erro ao carregar o gráfico!", "error");
+        return;
+    }
+    const ctx = document.getElementById('clientsChart').getContext('2d');
+    const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const clientCounts = months.map((_, index) => {
+        return clients.filter(client => {
+            const date = new Date(client.vencimento);
+            return date.getMonth() === index && date.getFullYear() === new Date().getFullYear();
+        }).length;
+    });
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Total de Clientes',
+                data: clientCounts,
+                backgroundColor: 'var(--primary-color)',
+                borderColor: 'var(--primary-hover)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon();
+}
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+function updateThemeIcon() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const icon = themeToggleBtn.querySelector('i');
+    if (currentTheme === 'dark') {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        themeToggleBtn.setAttribute('aria-label', 'Alternar para tema claro');
+    } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        themeToggleBtn.setAttribute('aria-label', 'Alternar para tema escuro');
+    }
+}
+
+function logout() {
+    localStorage.removeItem('theme');
+    localStorage.removeItem('dueMessage');
+    localStorage.removeItem('renewalMessage');
+    showToast("Logout realizado com sucesso!", "success");
+    setTimeout(() => window.location.reload(), 1000);
+}
+
+function openWhatsAppMessagesModal() {
+    document.getElementById('whatsappMessagesModal').style.display = 'flex';
+}
+
+function closeWhatsAppMessagesModal() {
+    document.getElementById('whatsappMessagesModal').style.display = 'none';
+}
+
+function loadWhatsAppMessages() {
+    const dueMessage = localStorage.getItem('dueMessage') || DEFAULT_DUE_MESSAGE;
+    const renewalMessage = localStorage.getItem('renewalMessage') || DEFAULT_RENEWAL_MESSAGE;
+    document.getElementById('dueMessage').value = dueMessage;
+    document.getElementById('renewalMessage').value = renewalMessage;
+}
+
+function setupWhatsAppMessagesForm() {
+    const whatsappMessagesForm = document.getElementById('whatsappMessagesForm');
+    const applyMessagesBtn = document.getElementById('applyMessagesBtn');
+
+    whatsappMessagesForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const dueMessage = document.getElementById('dueMessage').value;
+        const renewalMessage = document.getElementById('renewalMessage').value;
+
+        if (!dueMessage || !renewalMessage) {
+            showToast("Por favor, preencha ambas as mensagens!", "error");
+            return;
+        }
+
+        const invalidVars = [...new Set([...validateMessage(dueMessage), ...validateMessage(renewalMessage)])];
+        if (invalidVars.length > 0) {
+            showToast(`Variáveis inválidas encontradas: ${invalidVars.join(', ')}. Use apenas {cliente}, {valor}, {vencimento}!`, "error");
+            return;
+        }
+
+        localStorage.setItem('dueMessage', dueMessage);
+        localStorage.setItem('renewalMessage', renewalMessage);
+        showToast("Mensagens salvas com sucesso!", "success");
+        closeWhatsAppMessagesModal();
+    });
+
+    applyMessagesBtn.addEventListener('click', function () {
+        const dueMessage = document.getElementById('dueMessage').value;
+        const renewalMessage = document.getElementById('renewalMessage').value;
+
+        if (!dueMessage || !renewalMessage) {
+            showToast("Por favor, preencha ambas as mensagens!", "error");
+            return;
+        }
+
+        const invalidVars = [...new Set([...validateMessage(dueMessage), ...validateMessage(renewalMessage)])];
+        if (invalidVars.length > 0) {
+            showToast(`Variáveis inválidas encontradas: ${invalidVars.join(', ')}. Use apenas {cliente}, {valor}, {vencimento}!`, "error");
+            return;
+        }
+
+        localStorage.setItem('dueMessage', dueMessage);
+        localStorage.setItem('renewalMessage', renewalMessage);
+        showToast("Mensagens aplicadas com sucesso!", "success");
+    });
+}
+        
+    </script>
+    
+    
+</body>
+</html>
