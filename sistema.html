@@ -792,7 +792,7 @@ body {
             <button id="themeToggleBtn" onclick="toggleTheme()" aria-label="Alternar para tema escuro">
                 <i class="fas fa-moon"></i>
             </button>
-            <button id="logoutBtn" onclick="logout()">Sair</button>
+            <button id="logoutBtn" >Sair</button>
         </div>
     </div>
 
@@ -1522,13 +1522,7 @@ function updateThemeIcon() {
     }
 }
 
-function logout() {
-    localStorage.removeItem('theme');
-    localStorage.removeItem('dueMessage');
-    localStorage.removeItem('renewalMessage');
-    showToast("Logout realizado com sucesso!", "success");
-    setTimeout(() => window.location.reload(), 1000);
-}
+
 
 function openWhatsAppMessagesModal() {
     document.getElementById('whatsappMessagesModal').style.display = 'flex';
