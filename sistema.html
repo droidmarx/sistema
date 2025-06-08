@@ -1025,7 +1025,7 @@ function updateDateTime() {
         second: '2-digit',
         timeZone: 'America/Sao_Paulo'
     });
-    document.getElementById('currentDateTime').textContent = formattedDateTime;
+    document.getElementById('currentDateTime');
 }
 
 const form = document.getElementById("clientForm");
@@ -1610,7 +1610,7 @@ function setupWhatsAppMessagesForm() {
   // Função para atualizar a mensagem de boas-vindas
   function updateWelcomeMessage(fullName) {
     document.getElementById('welcomeMessage').textContent = 
-      `Bem vindo ${fullName}`;
+      `Bem vindo ${fullName} - ${formatDateTime()}`;
   }
 
   // Função para verificar o token
