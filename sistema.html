@@ -531,7 +531,6 @@ body {
 }
 
 #currentDateTime {
-    display:;
     font-size: 1em;
     color: var(--text-color);
 }
@@ -970,7 +969,7 @@ body {
                     <ul>
                         <li><code>{cliente}</code>: Nome do cliente</li>
                         <li><code>{valor}</code>: Valor do plano</li>
-                        <li><code>{vencimento}</code>: Data de vencimento</li>
+                        <li><code>{vencimento}</code>: Data de vencimento (DD/MM/AAAA)</li>
                     </ul>
                 </div>
                 <form id="whatsappMessagesForm">
@@ -1646,10 +1645,10 @@ function setupWhatsAppMessagesForm() {
   }
 
   // Verifica o token ao carregar a página
-  //verifyToken();
+  verifyToken();
 
   // Logout
-  document.getElementById('logoutBtn').addEventListener('click', () => {
+  document.getElementById('logoutB').addEventListener('click', () => {
     localStorage.removeItem('authToken');
     window.location.href = 'index.html';
   });
