@@ -530,7 +530,10 @@ body {
     color: var(--border-color);
 }
 
-
+#currentDateTime {
+    font-size: 1em;
+    color: var(--text-color);
+}
 
 #themeToggleBtn {
     background: transparent;
@@ -783,7 +786,7 @@ body {
     <div class="top-right-actions">
         <div class="left-info">
             <span id="welcomeMessage">Bem-vindo, Usuário!</span>
-            
+            <span id="currentDateTime"></span>
         </div>
         <div class="right-buttons">
             <button id="themeToggleBtn" onclick="toggleTheme()" aria-label="Alternar para tema escuro">
@@ -1022,7 +1025,7 @@ function updateDateTime() {
         second: '2-digit',
         timeZone: 'America/Sao_Paulo'
     });
-    
+    document.getElementById('currentDateTime').textContent = formattedDateTime;
 }
 
 const form = document.getElementById("clientForm");
@@ -1642,7 +1645,7 @@ function setupWhatsAppMessagesForm() {
   }
 
   // Verifica o token ao carregar a página
-  //verifyToken();
+  verifyToken();
 
   // Logout
   document.getElementById('logoutBtn').addEventListener('click', () => {
