@@ -1648,7 +1648,7 @@ function setupWhatsAppMessagesForm() {
   verifyToken();
 
   // Logout
-  document.getElementById('logoutButton').addEventListener('click', () => {
+  document.getElementById('logoutBtn').addEventListener('click', () => {
     localStorage.removeItem('authToken');
     window.location.href = 'index.html';
   });
