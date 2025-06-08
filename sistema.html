@@ -531,7 +531,6 @@ body {
 }
 
 #currentDateTime {
-    display:none;
     font-size: 1em;
     color: var(--text-color);
 }
@@ -1611,7 +1610,7 @@ function setupWhatsAppMessagesForm() {
   // Função para atualizar a mensagem de boas-vindas
   function updateWelcomeMessage(fullName) {
     document.getElementById('welcomeMessage').textContent = 
-      `Bem vindo ${fullName} - ${formatDateTime()}`;
+      `Bem vindo ${fullName}`;
   }
 
   // Função para verificar o token
