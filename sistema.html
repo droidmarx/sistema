@@ -531,6 +531,7 @@ body {
 }
 
 #currentDateTime {
+    display:none;
     font-size: 1em;
     color: var(--text-color);
 }
@@ -1645,7 +1646,7 @@ function setupWhatsAppMessagesForm() {
   }
 
   // Verifica o token ao carregar a página
-  verifyToken();
+  //verifyToken();
 
   // Logout
   document.getElementById('logoutBtn').addEventListener('click', () => {
