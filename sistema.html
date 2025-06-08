@@ -1025,7 +1025,7 @@ function updateDateTime() {
         second: '2-digit',
         timeZone: 'America/Sao_Paulo'
     });
-    document.getElementById('currentDateTime');
+    document.getElementById('currentDateTime').textContent = formattedDateTime;
 }
 
 const form = document.getElementById("clientForm");
