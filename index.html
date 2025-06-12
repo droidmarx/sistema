@@ -4,25 +4,221 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Seguro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #0a1a2f;
+      overflow: hidden;
+    }
+
+    .background-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-size: cover;
+      background-position: center;
+      animation: techPulse 15s ease-in-out infinite;
+    }
+
+    @keyframes techPulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+
+    .circuit-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://img.icons8.com/ios-filled/50/00b4d8/circuit.png') repeat;
+      background-size: 100px;
+      opacity: 0.2;
+      animation: circuitFlow 20s linear infinite;
+    }
+
+    @keyframes circuitFlow {
+      0% { background-position: 0 0; }
+      100% { background-position: 100px 100px; }
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 180, 216, 0.3);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .login-container h2 {
+      color: #e6f0ff;
+      margin-bottom: 30px;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 25px;
+      color: #e6f0ff;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-group input:focus,
+    .input-group input:not(:placeholder-shown) {
+      border-color: #00b4d8;
+      box-shadow: 0 0 10px rgba(0, 180, 216, 0.5);
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      color: #e6f0ff;
+      font-size: 1rem;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+      top: -10px;
+      left: 10px;
+      font-size: 0.8rem;
+      color: #00b4d8;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0 5px;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, #0077b6, #00b4d8);
+      border: none;
+      border-radius: 25px;
+      color: #e6f0ff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: 0.5s;
+    }
+
+    .login-btn:hover::before {
+      left: 100%;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 180, 216, 0.5);
+    }
+
+    .error-message {
+      color: #ff4d4d;
+      font-size: 0.9rem;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 20px;
+        margin: 20px;
+      }
+
+      .login-container h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
-    <form id="loginForm" class="space-y-4">
-      <div>
-        <label for="username" class="block text-sm font-medium text-gray-700">Usuário</label>
-        <input type="text" id="username" name="username" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+<body>
+  <div class="background-animation"></div>
+  <div class="circuit-overlay"></div>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <div class="input-group">
+        <input type="text" id="username" placeholder=" " required>
+        <label for="username">Usuário</label>
       </div>
-      <div>
-        <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
-        <input type="password" id="password" name="password" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <div class="input-group">
+        <input type="password" id="password" placeholder=" " required>
+        <label for="password">Senha</label>
       </div>
-      <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">Entrar</button>
+      <button type="submit" class="login-btn">Entrar</button>
     </form>
-    <p id="errorMessage" class="text-red-500 text-sm mt-4 hidden">Usuário ou senha inválidos.</p>
+    <p id="errorMessage" class="error-message">Usuário ou senha inválidos.</p>
   </div>
+
   <script>
+    // Lista de imagens de fundo tecnológicas
+    const backgroundImages = [
+      'https://images.unsplash.com/photo-1516321310764-8d9c9c48e6c4',
+      'https://images.unsplash.com/photo-1451187580459-43490279c0fa',
+      'https://images.unsplash.com/photo-1518709268805-4e9042af592e',
+      'https://images.unsplash.com/photo-1550745165-9bc0b252726f',
+      'https://images.unsplash.com/photo-1517430816045-df4b7de11d1d'
+    ];
+
+    // Função para selecionar uma imagem aleatória
+    function getRandomImage() {
+      return backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
+    }
+
+    // Aplica uma imagem aleatória ao fundo
+    document.querySelector('.background-animation').style.backgroundImage = `url('${getRandomImage()}')`;
+
     // Função para calcular SHA-256
     async function sha256(str) {
       const msgBuffer = new TextEncoder().encode(str);
@@ -54,11 +250,11 @@
           localStorage.setItem('authToken', result.token);
           window.location.href = 'sistema.html';
         } else {
-          errorMessage.classList.remove('hidden');
+          errorMessage.classList.add('show');
         }
       } catch (error) {
         console.error('Erro:', error);
-        errorMessage.classList.remove('hidden');
+        errorMessage.classList.add('show');
       }
     });
   </script>
