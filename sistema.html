@@ -1527,7 +1527,7 @@ function logout() {
     localStorage.removeItem('dueMessage');
     localStorage.removeItem('renewalMessage');
     showToast("Logout realizado com sucesso!", "success");
-    setTimeout(() => window.location.reload(), 1000);
+    setTimeout(() => window.location.href = "index.html", 1000);
 }
 
 function openWhatsAppMessagesModal() {
