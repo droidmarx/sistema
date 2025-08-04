@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="https://img.icons8.com/?size=160&id=JSLlF2pAdv2N&format=png">
-  <title>Login</title>
+  <link rel="icon" type="image/png" href="https://img.icons8.com/?size=160&id=JSLlF2pAdv2N&format=png">
+  <title>MaxTV ⚡</title>
   <style>
     * {
       margin: 0;
@@ -77,6 +77,7 @@
       font-size: 1rem;
       outline: none;
       transition: border-color 0.3s ease;
+      padding-right: 40px; /* Space for toggle button */
     }
 
     .input-group input:focus,
@@ -99,6 +100,28 @@
     .input-group input:not(:placeholder-shown) + label {
       top: 0;
       font-size: 0.75rem;
+      color: #3b82f6;
+    }
+
+    .input-group .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      display: none; /* Initially hidden */
+    }
+
+    .input-group .toggle-password.visible {
+      display: block; /* Show when password is entered */
+    }
+
+    .input-group .toggle-password:hover {
       color: #3b82f6;
     }
 
@@ -170,7 +193,7 @@
       bottom: 30px;
       right: 30px;
       background: #3b82f6;
-      color: #ffffff;
+      color: #xffffff;
       padding: 12px 24px;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -211,6 +234,7 @@
       <div class="input-group">
         <input type="password" id="password" placeholder=" " required>
         <label for="password">Senha</label>
+        <button type="button" class="toggle-password">👀</button>
       </div>
       <button type="submit" class="login-btn">Entrar</button>
     </form>
@@ -292,6 +316,23 @@
         this.parentElement.appendChild(ripple);
         setTimeout(() => ripple.remove(), 600);
       });
+    });
+
+    // Toggle password visibility
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.querySelector('.toggle-password');
+
+    function togglePasswordVisibility() {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      togglePassword.textContent = isPassword ? '🙈' : '👁️';
+    }
+
+    togglePassword.addEventListener('click', togglePasswordVisibility);
+
+    // Show/hide toggle button based on password input
+    passwordInput.addEventListener('input', function() {
+      togglePassword.classList.toggle('visible', this.value.length > 0);
     });
 
     // Toast notification
