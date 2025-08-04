@@ -112,6 +112,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: #B9B9B9;
 }
 
 .client-row:hover { background-color: var(--hover-bg); }
@@ -781,6 +782,13 @@ body {
         width: 100%;
     }
 }
+.panel-item{
+    overflow: hidden;
+}
+.panel-item span{
+    width: 300px;
+    font-size: 1;
+}
 </style>
 <body>
     <!-- Ações do Topo -->
@@ -940,7 +948,7 @@ body {
                         </div>
                         <div class="input-group">
                             <i class="fas fa-comment-alt"></i>
-                            <input type="text" id="panelDescription" placeholder="Descrição (opcional)">
+                            <input type="nu" id="panelDescription" placeholder="Descrição (opcional)">
                         </div>
                         <div class="input-group">
                             <i class="fas fa-toggle-on"></i>
@@ -1103,10 +1111,9 @@ async function renderClients(clients) {
             <div class="client-row" ${!isSearch ? `onclick="toggleDetails('${client.id}')"` : ''}>
                 <div class="client-info">
                     <span>${client.cliente}</span>
-                    <span class="due-date">Vence: ${formattedDate}</span>
+                    <span class="due-date">Vence: ${formattedDate} -  $${client.valor}</span>
                 </div>
-                <div class="client-actions">${actionButtons}</div>
-            </div>
+                <div class="client-actions">${actionButtons}${foundPanel ? foundPanel.nome : 'Painel não encontrado'} </div>
             <div id="details-${client.id}" class="client-details ${isSearch ? 'open' : ''}">
                 <p><strong>Tela:</strong> ${client.tela}</p>
                 <p><strong>Valor:</strong> R$ ${client.valor}</p>
