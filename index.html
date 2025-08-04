@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="https://img.icons8.com/?size=160&id=JSLlF2pAdv2N&format=png">
-  <title>MaxTV ⚡</title>
+  <title>Login</title>
   <style>
     * {
       margin: 0;
@@ -18,7 +18,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, #0A1228, #405F91);
+      background: linear-gradient(135deg, #0A1228, #91404E);
       overflow: hidden;
     }
 
@@ -118,11 +118,14 @@
     }
 
     .input-group .toggle-password.visible {
-      display: block; /* Show when password is entered */
+      display: block;
+      scale: 1.2;
+/* Show when password is entered */
     }
 
     .input-group .toggle-password:hover {
       color: #3b82f6;
+      scale: 1.5;
     }
 
     .input-group .ripple {
@@ -234,7 +237,7 @@
       <div class="input-group">
         <input type="password" id="password" placeholder=" " required>
         <label for="password">Senha</label>
-        <button type="button" class="toggle-password">👀</button>
+        <button type="button" class="toggle-password">🙈</button>
       </div>
       <button type="submit" class="login-btn">Entrar</button>
     </form>
@@ -325,7 +328,7 @@
     function togglePasswordVisibility() {
       const isPassword = passwordInput.type === 'password';
       passwordInput.type = isPassword ? 'text' : 'password';
-      togglePassword.textContent = isPassword ? '🙈' : '👁️';
+      togglePassword.textContent = isPassword ? '👀' : '🙈';
     }
 
     togglePassword.addEventListener('click', togglePasswordVisibility);
