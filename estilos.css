@@ -1,0 +1,811 @@
+:root {
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --bg-color: #fff;
+  --text-color: #333;
+  --border-color: #e0e0e0;
+  --hover-bg: #f5f5f5;
+  --expired-color: #d32f2f;
+  --expiring-color: #f57c00;
+  --in-day-color: #28a745;
+  --toast-success: #28a745;
+  --toast-error: #dc3545;
+  --theme-btn-color: #6c757d;
+  --theme-btn-hover: #5a6268;
+  --panel-btn-color: #6f42c1;
+  --panel-btn-hover: #5a32a3;
+  --messages-btn-color: #0052cc;
+  --messages-btn-hover: #003d99;
+  --input-bg: #f9f9f9;
+  --modal-header-bg: linear-gradient(135deg, #007bff, #00d4ff);
+  --panel-modal-header-bg: linear-gradient(135deg, #6f42c1, #9b59b6);
+  --messages-modal-header-bg: linear-gradient(135deg, #0052cc, #4682ff);
+}
+
+[data-theme="dark"] {
+  --bg-color: #1e1e1e;
+  --text-color: #e0e0e0;
+  --border-color: #444;
+  --hover-bg: #333;
+  --primary-color: #4a90e2;
+  --primary-hover: #357abd;
+  --toast-success: #2e7d32;
+  --toast-error: #d81b60;
+  --theme-btn-color: #adb5bd;
+  --theme-btn-hover: #868e96;
+  --panel-btn-color: #5a32a3;
+  --panel-btn-hover: #462585;
+  --messages-btn-color: #4682ff;
+  --messages-btn-hover: #356acc;
+  --input-bg: #2a2a2a;
+  --modal-header-bg: linear-gradient(135deg, #4a90e2, #6ab0ff);
+  --panel-modal-header-bg: linear-gradient(135deg, #5a32a3, #7d4bc8);
+  --messages-modal-header-bg: linear-gradient(135deg, #4682ff, #6a9bff);
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 20px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#clientTable {
+  width: 100%;
+  background-color: var(--bg-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.group-header {
+  background-color: var(--primary-color);
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.group-header.vencidos { background-color: var(--expired-color); }
+.group-header.vencendo { background-color: var(--expiring-color); }
+.group-header.em-dia { background-color: var(--in-day-color); }
+.group-header.todos { background-color: #6c757d; }
+
+.group-header i {
+  transition: transform 0.3s ease;
+}
+
+.group-header i.fa-chevron-up {
+  transform: rotate(180deg);
+}
+
+.group-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notification-count {
+  background-color: rgba(200, 200, 200, 0.7);
+  color: var(--text-color);
+  font-size: 0.8em;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.group-total {
+  font-size: 0.9em;
+  color: #fff;
+  font-weight: 500;
+}
+
+.group-content {
+  display: none;
+}
+
+.group-content.open {
+  display: block;
+}
+
+.client-row {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #B9B9B9;
+}
+
+.client-row:hover { background-color: var(--hover-bg); }
+.client-details { display: none; padding: 10px 20px; }
+.client-details.open { display: block; }
+
+#todos-content .client-details { display: block; }
+
+.client-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.client-info .due-date {
+  font-size: 0.9em;
+  color: var(--text-color);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.actions button, .actions a {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.actions button:hover, .actions a:hover {
+  background-color: var(--primary-hover);
+}
+
+.actions .due-alert { background-color: var(--expiring-color); }
+.actions .due-alert:hover { background-color: #e65100; }
+
+.client-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.whatsapp-btn, .renew-btn {
+  background-color: var(--expiring-color);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.whatsapp-btn:hover, .renew-btn:hover { background-color: #e65100; }
+
+#modal, #panelManagerModal, #whatsappMessagesModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#modal[style*="flex"], #panelManagerModal[style*="flex"], #whatsappMessagesModal[style*="flex"] {
+  opacity: 1;
+}
+
+.modal-content {
+  background-color: var(--bg-color);
+  padding: 0;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 70vw;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(50px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+#modal[style*="flex"] .modal-content, #panelManagerModal[style*="flex"] .modal-content, #whatsappMessagesModal[style*="flex"] .modal-content {
+  transform: translateY(0);
+  opacity: 1;
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+      transform: translateY(50px);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
+.modal-header {
+  background: var(--modal-header-bg);
+  padding: 15px 20px;
+  text-align: center;
+}
+
+#panelManagerModal .modal-header {
+  background: var(--panel-modal-header-bg);
+}
+
+#whatsappMessagesModal .modal-header {
+  background: var(--messages-modal-header-bg);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.6em;
+  color: #fff;
+}
+
+.modal-body {
+  padding: 20px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.panel-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-group i {
+  position: absolute;
+  left: 10px;
+  color: var(--primary-color);
+  font-size: 1.2em;
+  z-index: 1;
+}
+
+#panelManagerModal .input-group i {
+  color: var(--panel-btn-color);
+}
+
+#whatsappMessagesModal .input-group i {
+  color: var(--messages-btn-color);
+}
+
+.modal-content input, .modal-content select, .modal-content textarea {
+  padding: 12px 12px 12px 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1em;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+
+.modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+#panelManagerModal .modal-content input:focus, #panelManagerModal .modal-content select:focus {
+  border-color: var(--panel-btn-color);
+}
+
+#whatsappMessagesModal .modal-content textarea:focus {
+  border-color: var(--messages-btn-color);
+}
+
+.modal-content textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.modal-content button[type="submit"], #applyMessagesBtn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.modal-content button[type="submit"] {
+  background: linear-gradient(135deg, var(--messages-btn-color), var(--messages-btn-hover));
+}
+
+#applyMessagesBtn {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+}
+
+.modal-content button[type="submit"]:hover {
+  transform: scale(1.02);
+  background: linear-gradient(135deg, var(--messages-btn-hover), var(--messages-btn-color));
+}
+
+#applyMessagesBtn:hover {
+  transform: scale(1.02);
+  background: linear-gradient(135deg, var(--primary-hover), var(--primary-color));
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.4em;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#panelList {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+#panelList li {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: var(--input-bg);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: background-color 0.2s ease;
+}
+
+#panelList li:hover {
+  background-color: var(--hover-bg);
+}
+
+#panelList li span {
+  flex-grow: 1;
+  font-size: 0.95em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 10px;
+}
+
+#panelList li button {
+  padding: 6px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease;
+}
+
+#panelList li button:first-of-type {
+  background-color: var(--primary-color);
+  margin-right: 5px;
+}
+
+#panelList li button:first-of-type:hover {
+  background-color: var(--primary-hover);
+}
+
+#panelList li button:last-of-type {
+  background-color: var(--toast-error);
+}
+
+#panelList li button:last-of-type:hover {
+  background-color: #c82333;
+}
+
+.variables-info {
+  background-color: var(--input-bg);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.variables-info h3 {
+  margin: 0 0 10px;
+  font-size: 1.2em;
+  color: var(--text-color);
+}
+
+.variables-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.variables-info li {
+  margin-bottom: 5px;
+  font-size: 0.95em;
+}
+
+.variables-info code {
+  background-color: var(--hover-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+#total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+#summary {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.summary-card {
+  background-color: var(--bg-color);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  flex: 1;
+  min-width: 150px;
+  transition: background-color 0.3s;
+}
+
+.summary-card h3 {
+  margin: 0;
+  font-size: 1.2em;
+  color: var(--text-color);
+}
+
+.summary-card p {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.top-right-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
+}
+
+.left-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 10px;
+}
+
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 10px;
+}
+
+#welcomeMessage {
+  font-size: 1em;
+  color: var(--text-color);
+}
+
+#welcomeMessage::after {
+  content: ' |';
+  margin: 0 5px;
+  color: var(--border-color);
+}
+
+#currentDateTime {
+  font-size: 1em;
+  color: var(--text-color);
+}
+
+#themeToggleBtn {
+  background: transparent;
+  border: 2px solid var(--theme-btn-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+#themeToggleBtn i {
+  font-size: 1.2em;
+  color: var(--theme-btn-color);
+}
+
+#themeToggleBtn:hover {
+  background-color: var(--theme-btn-hover);
+  border-color: var(--theme-btn-hover);
+}
+
+#themeToggleBtn:hover i {
+  color: #fff;
+}
+
+#logoutBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--toast-error);
+  color: #fff;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+#logoutBtn:hover {
+  background-color: #c82333;
+}
+
+#filters {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+#filters input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  flex-grow: 1;
+  font-size: 1em;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px auto;
+  flex-wrap: wrap;
+}
+
+#new-client-btn, #panel-manager-btn, #whatsapp-messages-btn {
+  padding: 15px 40px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1.2em;
+  width: 30%;
+  max-width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+#new-client-btn {
+  background-color: var(--primary-color);
+}
+
+#new-client-btn:hover {
+  background-color: var(--primary-hover);
+}
+
+#panel-manager-btn {
+  background-color: var(--panel-btn-color);
+}
+
+#panel-manager-btn:hover {
+  background-color: var(--panel-btn-hover);
+}
+
+#whatsapp-messages-btn {
+  background-color: var(--messages-btn-color);
+}
+
+#whatsapp-messages-btn:hover {
+  background-color: var(--messages-btn-hover);
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  z-index: 2000;
+  animation: slideIn 0.3s ease;
+}
+
+.toast.success { background-color: var(--toast-success); }
+.toast.error { background-color: var(--toast-error); }
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  #clientTable {
+      display: block;
+      overflow-x: auto;
+  }
+
+  .modal-content {
+      width: 95%;
+      max-width: 95vw;
+  }
+
+  .input-group i {
+      font-size: 1em;
+  }
+
+  .modal-content input, .modal-content select, .modal-content textarea {
+      padding-left: 35px;
+  }
+
+  #new-client-btn, #panel-manager-btn, #whatsapp-messages-btn {
+      width: 90%;
+      padding: 12px 20px;
+      font-size: 1em;
+  }
+
+  .client-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+  }
+
+  .client-info {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .client-actions {
+      width: 100%;
+      justify-content: flex-start;
+  }
+
+  .panel-form-grid {
+      grid-template-columns: 1fr;
+  }
+
+  .group-info {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+  }
+
+  #panelList li {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+  }
+
+  #panelList li button {
+      width: 100%;
+  }
+
+  .variables-info ul {
+      font-size: 0.9em;
+  }
+
+  #total {
+      flex-direction: column;
+      align-items: center;
+  }
+
+  #summary {
+      justify-content: center;
+      width: 100%;
+  }
+
+  .top-right-actions {
+      gap: 5px;
+      padding: 0 5px;
+  }
+
+  .left-info, .right-buttons {
+      font-size: 0.9em;
+  }
+
+  #welcomeMessage::after {
+      content: none;
+  }
+
+  #themeToggleBtn {
+      width: 35px;
+      height: 35px;
+  }
+
+  #themeToggleBtn i {
+      font-size: 1em;
+  }
+
+  #logoutBtn {
+      padding: 6px 12px;
+      font-size: 0.9em;
+  }
+
+  .button-group {
+      flex-direction: column;
+      gap: 10px;
+  }
+
+  .button-group button {
+      width: 100%;
+  }
+}
+
+.panel-item {
+  overflow: hidden;
+}
+
+.panel-item span {
+  width: 300px;
+  font-size: 1;
+}
