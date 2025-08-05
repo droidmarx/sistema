@@ -1,207 +1,403 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="estilos.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="https://img.icons8.com/?size=160&id=JSLlF2pAdv2N&format=png">
+  <title>Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0A1228, #91404E);
+      overflow: hidden;
+    }
+
+    .meteor-canvas {
+      position: fixed;
+      top: 10;
+      left: 40;
+      width: 90%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(1px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.25);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-container h2 {
+      color: #ffffff;
+      font-size: 2rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      letter-spacing: 1px;
+      background: linear-gradient(45deg, #60a5fa, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 1.8rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+      padding-right: 40px; /* Space for toggle button */
+    }
+
+    .input-group input:focus,
+    .input-group input:not(:placeholder-shown) {
+      border-color: #3b82f6;
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+      top: 0;
+      font-size: 0.75rem;
+      color: #3b82f6;
+    }
+
+    .input-group .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      display: none; /* Initially hidden */
+    }
+
+    .input-group .toggle-password.visible {
+      display: block;
+      scale: 1.2;
+/* Show when password is entered */
+    }
+
+    .input-group .toggle-password:hover {
+      color: #3b82f6;
+      scale: 1.5;
+    }
+
+    .input-group .ripple {
+      position: absolute;
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(45deg, #2563eb, #60a5fa);
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .login-btn:hover::before {
+      left: 100%;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+    }
+
+    .error-message {
+      color: #f87171;
+      font-size: 0.9rem;
+      margin-top: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .error-message.show {
+      opacity: 1;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #3b82f6;
+      color: #xffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideIn 0.5s ease forwards, slideOut 0.5s 2.5s forwards;
+    }
+
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideOut {
+      to { opacity: 0; transform: translateY(20px); }
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .login-container h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="top-right-actions">
-            <div class="left-info">
-                <span id="welcomeMessage">Bem-vindo, Usuário!</span>
-                <span id="currentDateTime"></span>
-            </div>
-            <div class="right-buttons">
-                <button id="themeToggleBtn" aria-label="Alternar para tema escuro"><i class="fas fa-moon"></i></button>
-                <button id="logoutBtn" onclick="logout()">Sair</button>
-            </div>
-        </div>
+  <canvas class="meteor-canvas"></canvas>
+  <div class="login-container">
+    <h2>Login Seguro</h2>
+    <form id="loginForm">
+      <div class="input-group">
+        <input type="text" id="username" placeholder=" " required>
+        <label for="username">Usuário</label>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder=" " required>
+        <label for="password">Senha</label>
+        <button type="button" class="toggle-password">🙈</button>
+      </div>
+      <button type="submit" class="login-btn">Entrar</button>
+    </form>
+    <p id="errorMessage" class="error-message">Usuário ou senha inválidos.</p>
+  </div>
 
-        <div id="total">
-            <div id="summary">
-                <div class="summary-card">
-                    <h3>Total de Clientes</h3>
-                    <p id="totalClients">0</p>
-                </div>
-                <div class="summary-card">
-                    <h3>Valor Total</h3>
-                    <p id="totalValue">R$ 0</p>
-                </div>
-            </div>
-        </div>
+  <script>
+    // Meteor shower animation
+    const canvas = document.querySelector('.meteor-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-        <div class="top-actions">
-            <button id="new-client-btn"><i class="fas fa-user-plus"></i> Novo Cliente</button>
-            <button id="panel-manager-btn" onclick="openPanelManager()"><i class="fas fa-cogs"></i> Gerenciar Painéis</button>
-            <button id="whatsapp-messages-btn" onclick="openWhatsAppMessagesModal()"><i class="fab fa-whatsapp"></i> Configurar Mensagens</button>
-        </div>
+    const meteors = [];
+    class Meteor {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = -10;
+        this.length = Math.random() * 20 + 10;
+        this.speed = Math.random() * 5 + 3;
+        this.angle = Math.PI / 4; // 45-degree angle
+        this.opacity = Math.random() * 0.5 + 0.3;
+      }
 
-        <div id="filters">
-            <input type="text" id="search" placeholder="Pesquisar clientes...">
-        </div>
+      update() {
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+        if (this.y > canvas.height || this.x > canvas.width) {
+          this.x = Math.random() * canvas.width;
+          this.y = -10;
+          this.opacity = Math.random() * 0.5 + 0.3;
+        }
+      }
 
-        <div id="clientTable">
-            <div class="group-header vencidos">
-                <span>Vencidos <i class="fas fa-chevron-down"></i></span>
-                <div class="group-info">
-                    <span class="notification-count" id="vencidos-count">0</span>
-                    <span class="group-total" id="vencidos-total">R$ 0</span>
-                </div>
-            </div>
-            <div class="group-content" id="vencidos-group"></div>
+      draw() {
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x - this.length * Math.cos(this.angle), this.y - this.length * Math.sin(this.angle));
+        ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    }
 
-            <div class="group-header vencendo">
-                <span>Vencendo (próximos 3 dias) <i class="fas fa-chevron-down"></i></span>
-                <div class="group-info">
-                    <span class="notification-count" id="vencendo-count">0</span>
-                    <span class="group-total" id="vencendo-total">R$ 0</span>
-                </div>
-            </div>
-            <div class="group-content" id="vencendo-group"></div>
+    function initMeteors() {
+      for (let i = 0; i < 20; i++) {
+        meteors.push(new Meteor());
+      }
+    }
 
-            <div class="group-header em-dia">
-                <span>Em Dia <i class="fas fa-chevron-down"></i></span>
-                <div class="group-info">
-                    <span class="notification-count" id="em-dia-count">0</span>
-                    <span class="group-total" id="em-dia-total">R$ 0</span>
-                </div>
-            </div>
-            <div class="group-content" id="em-dia-group"></div>
+    function animateMeteors() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      meteors.forEach(meteor => {
+        meteor.update();
+        meteor.draw();
+      });
+      requestAnimationFrame(animateMeteors);
+    }
 
-            <div class="group-header todos" id="todos-group" style="display: none;">
-                <span>Todos os Clientes</span>
-            </div>
-            <div class="group-content" id="todos-content"></div>
-        </div>
+    initMeteors();
+    animateMeteors();
 
-        <div id="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="modalTitle">Novo Cliente</h2>
-                    <span class="close-btn" onclick="closeModal()">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <form id="clientForm">
-                        <div class="input-group">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="cliente" placeholder="Nome" required>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-tv"></i>
-                            <input type="text" id="tela" placeholder="Tela" required>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-percent"></i>
-                            <input type="number" id="desconto" placeholder="Desconto (%)">
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-dollar-sign"></i>
-                            <input type="number" id="valor" placeholder="Valor" required>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-phone"></i>
-                            <input type="text" id="whats" placeholder="WhatsApp" required>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-th"></i>
-                            <select id="painel" required>
-                                <option value="">Selecione um painel</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-network-wired"></i>
-                            <input type="text" id="mac" placeholder="MAC">
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-key"></i>
-                            <input type="text" id="safekey" placeholder="SafeKey">
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-sticky-note"></i>
-                            <textarea id="observacoes" placeholder="Observações"></textarea>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-calendar-alt"></i>
-                            <input type="date" id="vencimento" placeholder="Data de Vencimento" required>
-                        </div>
-                        <button type="submit"><i class="fas fa-save"></i> Salvar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
 
-        <div id="panelManagerModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Gerenciar Painéis</h2>
-                    <span class="close-btn" onclick="closePanelManager()">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <form id="panelForm" class="panel-form-grid">
-                        <div class="input-group">
-                            <i class="fas fa-th"></i>
-                            <input type="text" id="panelName" placeholder="Nome do Painel" required>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-link"></i>
-                            <input type="url" id="panelLink" placeholder="Link do Painel" required>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-dollar-sign"></i>
-                            <input type="number" id="valorCredito" placeholder="Valor do Crédito" required>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-toggle-on"></i>
-                            <select id="panelStatus" required>
-                                <option value="active">Ativo</option>
-                                <option value="inactive">Inativo</option>
-                            </select>
-                        </div>
-                        <input type="hidden" id="panelId">
-                        <button type="submit"><i class="fas fa-save"></i> Salvar Painel</button>
-                    </form>
-                    <ul id="panelList"></ul>
-                </div>
-            </div>
-        </div>
+    // Google-like ripple effect on input click
+    document.querySelectorAll('.input-group input').forEach(input => {
+      input.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        const diameter = Math.max(this.clientWidth, this.clientHeight);
+        const radius = diameter / 2;
+        ripple.style.width = ripple.style.height = `${diameter}px`;
+        ripple.style.left = `${e.clientX - rect.left - radius}px`;
+        ripple.style.top = `${e.clientY - rect.top - radius}px`;
+        this.parentElement.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
 
-        <div id="whatsappMessagesModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Configurar Mensagens do WhatsApp</h2>
-                    <span class="close-btn" onclick="closeWhatsAppMessagesModal()">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div class="variables-info">
-                        <h3>Variáveis Disponíveis</h3>
-                        <ul>
-                            <li><code>{cliente}</code>: Nome do cliente</li>
-                            <li><code>{valor}</code>: Valor do plano</li>
-                            <li><code>{vencimento}</code>: Data de vencimento</li>
-                        </ul>
-                    </div>
-                    <form id="whatsappMessagesForm">
-                        <div class="input-group">
-                            <i class="fas fa-comment"></i>
-                            <textarea id="dueMessage" placeholder="Mensagem de Vencimento"></textarea>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-comment-alt"></i>
-                            <textarea id="renewalMessage" placeholder="Mensagem de Renovação"></textarea>
-                        </div>
-                        <div class="button-group">
-                            <button type="submit"><i class="fas fa-save"></i> Salvar Mensagens</button>
-                            <button type="button" id="applyMessagesBtn"><i class="fas fa-check"></i> Aplicar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    // Toggle password visibility
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.querySelector('.toggle-password');
 
-    <script src="script.js"></script>
+    function togglePasswordVisibility() {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      togglePassword.textContent = isPassword ? '👀' : '🙈';
+    }
+
+    togglePassword.addEventListener('click', togglePasswordVisibility);
+
+    // Show/hide toggle button based on password input
+    passwordInput.addEventListener('input', function() {
+      togglePassword.classList.toggle('visible', this.value.length > 0);
+    });
+
+    // Toast notification
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('theme');
+      localStorage.removeItem('dueMessage');
+      localStorage.removeItem('renewalMessage');
+      showToast("Logout realizado com sucesso!", "success");
+      setTimeout(() => window.location.href = 'index.html', 1000);
+    }
+
+    // SHA-256 hashing
+    async function sha256(str) {
+      const msgBuffer = new TextEncoder().encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Form submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('errorMessage');
+
+      const passwordHash = await sha256(password);
+
+      try {
+        const response = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, passwordHash })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          localStorage.setItem('authToken', result.token);
+          window.location.href = 'sistema.html';
+        } else {
+          errorMessage.classList.add('show');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        errorMessage.classList.add('show');
+      }
+    });
+
+    // Auto-logout if authToken exists
+    if (localStorage.getItem('authToken')) {
+      logout();
+    }
+  </script>
 </body>
 </html>
