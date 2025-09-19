@@ -1,29 +1,38 @@
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+     const jwt = require('jsonwebtoken');
 
-module.exports = async (req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método não permitido' });
-  }
+     module.exports = async (req, res) => {
+       if (req.method !== 'POST') {
+         return res.status(405).json({ error: 'Método não permitido' });
+       }
 
-  const { username, passwordHash } = req.body;
+       const { username, password } = req.body;
 
-  // Carrega hashes das senhas das variáveis de ambiente
-  const users = {
-    'Gui': { hash: process.env.HASH_GUI, fullName: 'Guilherme Marques' },
-    'Tayna': { hash: process.env.HASH_TAYNA, fullName: 'Tayná Ortiz' }
-  };
+       if (!username || !password) {
+         return res.status(400).json({ success: false, error: 'Usuário e senha são obrigatórios' });
+       }
 
-  // Valida usuário e hash da senha
-  if (users[username] && users[username].hash === passwordHash) {
-    // Gera JWT com expiração de 1 hora, incluindo o nome completo
-    const token = jwt.sign(
-      { username, fullName: users[username].fullName },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-    return res.status(200).json({ success: true, token });
-  }
+       const users = {
+         'Gui': { hash: process.env.HASH_GUI, fullName: 'Guilherme Marques' },
+         'Tayna': { hash: process.env.HASH_TAYNA, fullName: 'Tayná Ortiz' }
+       };
 
-  return res.status(401).json({ success: false, error: 'Usuário ou senha inválidos' });
-};
+       if (users[username]) {
+         try {
+           const isPasswordValid = await bcrypt.compare(password, users[username].hash);
+           if (isPasswordValid) {
+             const token = jwt.sign(
+               { username, fullName: users[username].fullName },
+               process.env.JWT_SECRET,
+               { expiresIn: '1h' }
+             );
+             return res.status(200).json({ success: true, token });
+           }
+         } catch (error) {
+           console.error('Erro na validação da senha:', error);
+           return res.status(500).json({ success: false, error: 'Erro interno do servidor' });
+         }
+       }
+
+       return res.status(401).json({ success: false, error: 'Usuário ou senha inválidos' });
+     };
