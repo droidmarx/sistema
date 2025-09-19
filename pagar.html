@@ -518,32 +518,34 @@
         }
     </script>
         <script>
-        // Verificação de autenticação
         document.addEventListener('DOMContentLoaded', async () => {
-            const token = localStorage.getItem('authToken');
-            if (!token) {
-                alert('Por favor, faça login para acessar esta página.');
-                window.location.href = '/login.html'; // Ajuste para a página de login correta
-                return;
-            }
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        alert('Por favor, faça login para acessar esta página.');
+        window.location.href = '/index.html'; // Ajustado de /login.html para /index.html
+        return;
+    }
 
-            // Opcional: Validar token com o backend
-            try {
-                const response = await fetch('/api/verify', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (!response.ok) {
-                    throw new Error('Token inválido');
-                }
-                // Token válido, prosseguir com o carregamento da página
-            } catch (error) {
-                console.error('Erro na verificação:', error);
-                alert('Sessão expirada. Faça login novamente.');
-                localStorage.removeItem('authToken');
-                window.location.href = '/login.html';
-            }
+    try {
+        const response = await fetch('/api/verify', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
         });
+        if (!response.ok) {
+            throw new Error('Token inválido');
+        }
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error);
+        }
+        console.log('Usuário autenticado:', data.user);
+    } catch (error) {
+        console.error('Erro na verificação:', error);
+        alert('Sessão expirada. Faça login novamente.');
+        localStorage.removeItem('authToken');
+        window.location.href = '/index.html'; // Ajustado de /login.html para /index.html
+    }
+});
     </script>
 
 </body>
