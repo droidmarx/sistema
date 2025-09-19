@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="https://img.icons8.com/?size=160&id=108803&format=png">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
-  <title>Login - Sistema de Gerenciamento de TV</title>
+  <link rel="icon" type="image/png" href="https://img.icons8.com/?size=160&id=JSLlF2pAdv2N&format=png">
+  <title>Login</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     body {
@@ -19,28 +18,28 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, #0A1228, #1E3A8A);
+      background: linear-gradient(135deg, #0A1228, #91404E);
       overflow: hidden;
     }
 
-    .tv-canvas {
+    .meteor-canvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
+      top: 10;
+      left: 40;
+      width: 90%;
       height: 100%;
       z-index: -1;
     }
 
     .login-container {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 3rem;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(1px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.25);
       width: 100%;
-      max-width: 450px;
+      max-width: 400px;
       text-align: center;
       position: relative;
       z-index: 1;
@@ -48,53 +47,42 @@
     }
 
     @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(20px); }
+      0% { opacity: 0; transform: translateY(10px); }
       100% { opacity: 1; transform: translateY(0); }
-    }
-
-    .login-container.zoom-out {
-      animation: zoomOut 0.6s ease forwards;
-    }
-
-    @keyframes zoomOut {
-      0% { transform: scale(1); filter: blur(0); opacity: 1; }
-      100% { transform: scale(1.5); filter: blur(10px); opacity: 0; }
     }
 
     .login-container h2 {
       color: #ffffff;
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin-bottom: 2.5rem;
-      letter-spacing: 1.5px;
-      background: linear-gradient(45deg, #3b82f6, #93c5fd);
+      font-size: 2rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      letter-spacing: 1px;
+      background: linear-gradient(45deg, #60a5fa, #93c5fd);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .input-group {
       position: relative;
-      margin-bottom: 2rem;
+      margin-bottom: 1.8rem;
     }
 
     .input-group input {
       width: 100%;
-      padding: 14px 16px;
+      padding: 12px 16px;
       background: transparent;
-      border: 2px solid rgba(255, 255, 255, 0.4);
-      border-radius: 8px;
+      border: none;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
       color: #ffffff;
-      font-size: 1.1rem;
+      font-size: 1rem;
       outline: none;
-      transition: all 0.3s ease;
-      padding-right: 50px;
+      transition: border-color 0.3s ease;
+      padding-right: 40px; /* Space for toggle button */
     }
 
     .input-group input:focus,
     .input-group input:not(:placeholder-shown) {
-      border-color: #60a5fa;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-      transform: scale(1.02);
+      border-color: #3b82f6;
     }
 
     .input-group label {
@@ -102,7 +90,7 @@
       top: 50%;
       left: 16px;
       transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.7);
       font-size: 1rem;
       pointer-events: none;
       transition: all 0.3s ease;
@@ -110,40 +98,39 @@
 
     .input-group input:focus + label,
     .input-group input:not(:placeholder-shown) + label {
-      top: -10px;
-      font-size: 0.8rem;
-      color: #60a5fa;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 0 6px;
-      border-radius: 4px;
+      top: 0;
+      font-size: 0.75rem;
+      color: #3b82f6;
     }
 
     .input-group .toggle-password {
       position: absolute;
-      right: 15px;
+      right: 10px;
       top: 50%;
       transform: translateY(-50%);
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
       cursor: pointer;
-      transition: all 0.3s ease;
-      display: none;
+      transition: color 0.3s ease;
+      display: none; /* Initially hidden */
     }
 
     .input-group .toggle-password.visible {
       display: block;
+      scale: 1.2;
+/* Show when password is entered */
     }
 
     .input-group .toggle-password:hover {
-      color: #60a5fa;
-      transform: translateY(-50%) scale(1.3);
+      color: #3b82f6;
+      scale: 1.5;
     }
 
     .input-group .ripple {
       position: absolute;
-      background: rgba(59, 130, 246, 0.4);
+      background: rgba(59, 130, 246, 0.3);
       border-radius: 50%;
       transform: scale(0);
       animation: ripple 0.6s linear;
@@ -159,13 +146,13 @@
 
     .login-btn {
       width: 100%;
-      padding: 16px;
+      padding: 14px;
       background: linear-gradient(45deg, #2563eb, #60a5fa);
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       color: #ffffff;
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-size: 1.1rem;
+      font-weight: 500;
       cursor: pointer;
       position: relative;
       overflow: hidden;
@@ -179,7 +166,7 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
       transition: left 0.5s ease;
     }
 
@@ -188,13 +175,13 @@
     }
 
     .login-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
     }
 
     .error-message {
       color: #f87171;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       margin-top: 1.5rem;
       opacity: 0;
       transition: opacity 0.3s ease;
@@ -209,7 +196,7 @@
       bottom: 30px;
       right: 30px;
       background: #3b82f6;
-      color: #ffffff;
+      color: #xffffff;
       padding: 12px 24px;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -228,20 +215,20 @@
 
     @media (max-width: 480px) {
       .login-container {
-        padding: 2rem;
+        padding: 1.5rem;
         margin: 1rem;
       }
 
       .login-container h2 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
       }
     }
   </style>
 </head>
 <body>
-  <canvas class="tv-canvas"></canvas>
+  <canvas class="meteor-canvas"></canvas>
   <div class="login-container">
-    <h2>Sistema de Gerenciamento de TV</h2>
+    <h2>Login Seguro</h2>
     <form id="loginForm">
       <div class="input-group">
         <input type="text" id="username" placeholder=" " required>
@@ -258,68 +245,69 @@
   </div>
 
   <script>
-    // TV signal wave animation
-    const canvas = document.querySelector('.tv-canvas');
+    // Meteor shower animation
+    const canvas = document.querySelector('.meteor-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const waves = [];
-    class SignalWave {
+    const meteors = [];
+    class Meteor {
       constructor() {
         this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.radius = 0;
-        this.maxRadius = Math.random() * 100 + 50;
-        this.speed = Math.random() * 0.02 + 0.01;
-        this.opacity = Math.random() * 0.3 + 0.1;
+        this.y = -10;
+        this.length = Math.random() * 20 + 10;
+        this.speed = Math.random() * 5 + 3;
+        this.angle = Math.PI / 4; // 45-degree angle
+        this.opacity = Math.random() * 0.5 + 0.3;
       }
 
       update() {
-        this.radius += this.speed;
-        if (this.radius > this.maxRadius) {
-          this.radius = 0;
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+        if (this.y > canvas.height || this.x > canvas.width) {
           this.x = Math.random() * canvas.width;
-          this.y = Math.random() * canvas.height;
-          this.opacity = Math.random() * 0.3 + 0.1;
+          this.y = -10;
+          this.opacity = Math.random() * 0.5 + 0.3;
         }
       }
 
       draw() {
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(59, 130, 246, ${this.opacity})`;
-        ctx.lineWidth = 2;
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x - this.length * Math.cos(this.angle), this.y - this.length * Math.sin(this.angle));
+        ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.lineWidth = 1.5;
         ctx.stroke();
       }
     }
 
-    function initWaves() {
-      for (let i = 0; i < 15; i++) {
-        waves.push(new SignalWave());
+    function initMeteors() {
+      for (let i = 0; i < 20; i++) {
+        meteors.push(new Meteor());
       }
     }
 
-    function animateWaves() {
+    function animateMeteors() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      waves.forEach(wave => {
-        wave.update();
-        wave.draw();
+      meteors.forEach(meteor => {
+        meteor.update();
+        meteor.draw();
       });
-      requestAnimationFrame(animateWaves);
+      requestAnimationFrame(animateMeteors);
     }
 
-    initWaves();
-    animateWaves();
+    initMeteors();
+    animateMeteors();
 
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     });
 
-    // Enhanced ripple effect on input focus
+    // Google-like ripple effect on input click
     document.querySelectorAll('.input-group input').forEach(input => {
-      input.addEventListener('focus', function(e) {
+      input.addEventListener('click', function(e) {
         const rect = this.getBoundingClientRect();
         const ripple = document.createElement('span');
         ripple.className = 'ripple';
@@ -365,7 +353,7 @@
       localStorage.removeItem('theme');
       localStorage.removeItem('dueMessage');
       localStorage.removeItem('renewalMessage');
-      showToast("Logout realizado com sucesso!");
+      showToast("Logout realizado com sucesso!", "success");
       setTimeout(() => window.location.href = 'index.html', 1000);
     }
 
@@ -377,39 +365,12 @@
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Redirecionar para sistema.html se já autenticado
-    document.addEventListener('DOMContentLoaded', async () => {
-      const token = localStorage.getItem('authToken');
-      if (token) {
-        try {
-          const response = await fetch('/api/verify', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-              window.location.href = '/sistema.html';
-            } else {
-              logout();
-            }
-          } else {
-            logout();
-          }
-        } catch (error) {
-          console.error('Erro na verificação do token:', error);
-          logout();
-        }
-      }
-    });
-
-    // Form submission with zoom-out animation
+    // Form submission
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const errorMessage = document.getElementById('errorMessage');
-      const loginContainer = document.querySelector('.login-container');
 
       const passwordHash = await sha256(password);
 
@@ -423,10 +384,7 @@
         const result = await response.json();
         if (result.success) {
           localStorage.setItem('authToken', result.token);
-          loginContainer.classList.add('zoom-out');
-          setTimeout(() => {
-            window.location.href = 'sistema.html';
-          }, 600); // Match animation duration
+          window.location.href = 'sistema.html';
         } else {
           errorMessage.classList.add('show');
         }
@@ -435,6 +393,11 @@
         errorMessage.classList.add('show');
       }
     });
+
+    // Auto-logout if authToken exists
+    if (localStorage.getItem('authToken')) {
+      logout();
+    }
   </script>
 </body>
 </html>
