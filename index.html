@@ -377,6 +377,32 @@
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
+    // Redirecionar para sistema.html se já autenticado
+    document.addEventListener('DOMContentLoaded', async () => {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        try {
+          const response = await fetch('/api/verify', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              window.location.href = '/sistema.html';
+            } else {
+              logout();
+            }
+          } else {
+            logout();
+          }
+        } catch (error) {
+          console.error('Erro na verificação do token:', error);
+          logout();
+        }
+      }
+    });
+
     // Form submission with zoom-out animation
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -409,11 +435,6 @@
         errorMessage.classList.add('show');
       }
     });
-
-    // Auto-logout if authToken exists
-    if (localStorage.getItem('authToken')) {
-      logout();
-    }
   </script>
 </body>
 </html>
