@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="https://img.icons8.com/?size=160&id=JSLlF2pAdv2N&format=png">
-  <title>Login</title>
+  <link rel="icon" type="image/png" href="https://img.icons8.com/?size=160&id=108803&format=png">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>Login - Sistema de Gerenciamento de TV</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     body {
@@ -18,28 +19,28 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, #0A1228, #91404E);
+      background: linear-gradient(135deg, #0A1228, #1E3A8A);
       overflow: hidden;
     }
 
-    .meteor-canvas {
+    .tv-canvas {
       position: fixed;
-      top: 10;
-      left: 40;
-      width: 90%;
+      top: 0;
+      left: 0;
+      width: 100%;
       height: 100%;
       z-index: -1;
     }
 
     .login-container {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(1px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 2.5rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.25);
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 3rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
       width: 100%;
-      max-width: 400px;
+      max-width: 450px;
       text-align: center;
       position: relative;
       z-index: 1;
@@ -47,42 +48,53 @@
     }
 
     @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(10px); }
+      0% { opacity: 0; transform: translateY(20px); }
       100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-container.zoom-out {
+      animation: zoomOut 0.6s ease forwards;
+    }
+
+    @keyframes zoomOut {
+      0% { transform: scale(1); filter: blur(0); opacity: 1; }
+      100% { transform: scale(1.5); filter: blur(10px); opacity: 0; }
     }
 
     .login-container h2 {
       color: #ffffff;
-      font-size: 2rem;
-      font-weight: 500;
-      margin-bottom: 2rem;
-      letter-spacing: 1px;
-      background: linear-gradient(45deg, #60a5fa, #93c5fd);
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+      letter-spacing: 1.5px;
+      background: linear-gradient(45deg, #3b82f6, #93c5fd);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .input-group {
       position: relative;
-      margin-bottom: 1.8rem;
+      margin-bottom: 2rem;
     }
 
     .input-group input {
       width: 100%;
-      padding: 12px 16px;
+      padding: 14px 16px;
       background: transparent;
-      border: none;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
       color: #ffffff;
-      font-size: 1rem;
+      font-size: 1.1rem;
       outline: none;
-      transition: border-color 0.3s ease;
-      padding-right: 40px; /* Space for toggle button */
+      transition: all 0.3s ease;
+      padding-right: 50px;
     }
 
     .input-group input:focus,
     .input-group input:not(:placeholder-shown) {
-      border-color: #3b82f6;
+      border-color: #60a5fa;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+      transform: scale(1.02);
     }
 
     .input-group label {
@@ -90,7 +102,7 @@
       top: 50%;
       left: 16px;
       transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.8);
       font-size: 1rem;
       pointer-events: none;
       transition: all 0.3s ease;
@@ -98,39 +110,40 @@
 
     .input-group input:focus + label,
     .input-group input:not(:placeholder-shown) + label {
-      top: 0;
-      font-size: 0.75rem;
-      color: #3b82f6;
+      top: -10px;
+      font-size: 0.8rem;
+      color: #60a5fa;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0 6px;
+      border-radius: 4px;
     }
 
     .input-group .toggle-password {
       position: absolute;
-      right: 10px;
+      right: 15px;
       top: 50%;
       transform: translateY(-50%);
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.2rem;
       cursor: pointer;
-      transition: color 0.3s ease;
-      display: none; /* Initially hidden */
+      transition: all 0.3s ease;
+      display: none;
     }
 
     .input-group .toggle-password.visible {
       display: block;
-      scale: 1.2;
-/* Show when password is entered */
     }
 
     .input-group .toggle-password:hover {
-      color: #3b82f6;
-      scale: 1.5;
+      color: #60a5fa;
+      transform: translateY(-50%) scale(1.3);
     }
 
     .input-group .ripple {
       position: absolute;
-      background: rgba(59, 130, 246, 0.3);
+      background: rgba(59, 130, 246, 0.4);
       border-radius: 50%;
       transform: scale(0);
       animation: ripple 0.6s linear;
@@ -146,13 +159,13 @@
 
     .login-btn {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       background: linear-gradient(45deg, #2563eb, #60a5fa);
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       color: #ffffff;
-      font-size: 1.1rem;
-      font-weight: 500;
+      font-size: 1.2rem;
+      font-weight: 600;
       cursor: pointer;
       position: relative;
       overflow: hidden;
@@ -166,7 +179,7 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
       transition: left 0.5s ease;
     }
 
@@ -175,13 +188,13 @@
     }
 
     .login-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
     }
 
     .error-message {
       color: #f87171;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       margin-top: 1.5rem;
       opacity: 0;
       transition: opacity 0.3s ease;
@@ -196,7 +209,7 @@
       bottom: 30px;
       right: 30px;
       background: #3b82f6;
-      color: #xffffff;
+      color: #ffffff;
       padding: 12px 24px;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -215,20 +228,20 @@
 
     @media (max-width: 480px) {
       .login-container {
-        padding: 1.5rem;
+        padding: 2rem;
         margin: 1rem;
       }
 
       .login-container h2 {
-        font-size: 1.6rem;
+        font-size: 1.8rem;
       }
     }
   </style>
 </head>
 <body>
-  <canvas class="meteor-canvas"></canvas>
+  <canvas class="tv-canvas"></canvas>
   <div class="login-container">
-    <h2>Login Seguro</h2>
+    <h2>Sistema de Gerenciamento de TV</h2>
     <form id="loginForm">
       <div class="input-group">
         <input type="text" id="username" placeholder=" " required>
@@ -245,69 +258,68 @@
   </div>
 
   <script>
-    // Meteor shower animation
-    const canvas = document.querySelector('.meteor-canvas');
+    // TV signal wave animation
+    const canvas = document.querySelector('.tv-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const meteors = [];
-    class Meteor {
+    const waves = [];
+    class SignalWave {
       constructor() {
         this.x = Math.random() * canvas.width;
-        this.y = -10;
-        this.length = Math.random() * 20 + 10;
-        this.speed = Math.random() * 5 + 3;
-        this.angle = Math.PI / 4; // 45-degree angle
-        this.opacity = Math.random() * 0.5 + 0.3;
+        this.y = Math.random() * canvas.height;
+        this.radius = 0;
+        this.maxRadius = Math.random() * 100 + 50;
+        this.speed = Math.random() * 0.02 + 0.01;
+        this.opacity = Math.random() * 0.3 + 0.1;
       }
 
       update() {
-        this.x += Math.cos(this.angle) * this.speed;
-        this.y += Math.sin(this.angle) * this.speed;
-        if (this.y > canvas.height || this.x > canvas.width) {
+        this.radius += this.speed;
+        if (this.radius > this.maxRadius) {
+          this.radius = 0;
           this.x = Math.random() * canvas.width;
-          this.y = -10;
-          this.opacity = Math.random() * 0.5 + 0.3;
+          this.y = Math.random() * canvas.height;
+          this.opacity = Math.random() * 0.3 + 0.1;
         }
       }
 
       draw() {
         ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x - this.length * Math.cos(this.angle), this.y - this.length * Math.sin(this.angle));
-        ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        ctx.lineWidth = 1.5;
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(59, 130, 246, ${this.opacity})`;
+        ctx.lineWidth = 2;
         ctx.stroke();
       }
     }
 
-    function initMeteors() {
-      for (let i = 0; i < 20; i++) {
-        meteors.push(new Meteor());
+    function initWaves() {
+      for (let i = 0; i < 15; i++) {
+        waves.push(new SignalWave());
       }
     }
 
-    function animateMeteors() {
+    function animateWaves() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      meteors.forEach(meteor => {
-        meteor.update();
-        meteor.draw();
+      waves.forEach(wave => {
+        wave.update();
+        wave.draw();
       });
-      requestAnimationFrame(animateMeteors);
+      requestAnimationFrame(animateWaves);
     }
 
-    initMeteors();
-    animateMeteors();
+    initWaves();
+    animateWaves();
 
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     });
 
-    // Google-like ripple effect on input click
+    // Enhanced ripple effect on input focus
     document.querySelectorAll('.input-group input').forEach(input => {
-      input.addEventListener('click', function(e) {
+      input.addEventListener('focus', function(e) {
         const rect = this.getBoundingClientRect();
         const ripple = document.createElement('span');
         ripple.className = 'ripple';
@@ -353,7 +365,7 @@
       localStorage.removeItem('theme');
       localStorage.removeItem('dueMessage');
       localStorage.removeItem('renewalMessage');
-      showToast("Logout realizado com sucesso!", "success");
+      showToast("Logout realizado com sucesso!");
       setTimeout(() => window.location.href = 'index.html', 1000);
     }
 
@@ -365,12 +377,13 @@
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Form submission
+    // Form submission with zoom-out animation
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const errorMessage = document.getElementById('errorMessage');
+      const loginContainer = document.querySelector('.login-container');
 
       const passwordHash = await sha256(password);
 
@@ -384,7 +397,10 @@
         const result = await response.json();
         if (result.success) {
           localStorage.setItem('authToken', result.token);
-          window.location.href = 'sistema.html';
+          loginContainer.classList.add('zoom-out');
+          setTimeout(() => {
+            window.location.href = 'sistema.html';
+          }, 600); // Match animation duration
         } else {
           errorMessage.classList.add('show');
         }
