@@ -408,10 +408,10 @@
       }
     });
 
-    // Auto-logout if authToken exists
-    if (localStorage.getItem('authToken')) {
-      logout();
-    }
+    // Se o usuário já estiver logado, redireciona direto
+if (localStorage.getItem('authToken')) {
+  window.location.href = 'sistema.html';
+}
   </script>
 </body>
 </html>
