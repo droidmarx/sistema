@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="https://img.icons8.com/?size=160&id=108803&format=png">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <title>Login - Sistema de Gerenciamento de TV</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     body {
@@ -19,7 +19,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, #0A1228, #1E3A8A);
+      background: linear-gradient(135deg, #1F2937, #4B5563);
       overflow: hidden;
     }
 
@@ -30,17 +30,18 @@
       width: 100%;
       height: 100%;
       z-index: -1;
+      opacity: 0.3;
     }
 
     .login-container {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 3rem;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
       width: 100%;
-      max-width: 450px;
+      max-width: 400px;
       text-align: center;
       position: relative;
       z-index: 1;
@@ -63,38 +64,38 @@
 
     .login-container h2 {
       color: #ffffff;
-      font-size: 2.2rem;
+      font-size: 1.8rem;
       font-weight: 700;
-      margin-bottom: 2.5rem;
-      letter-spacing: 1.5px;
-      background: linear-gradient(45deg, #3b82f6, #93c5fd);
+      margin-bottom: 2rem;
+      letter-spacing: 1px;
+      background: linear-gradient(45deg, #10B981, #34D399);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .input-group {
       position: relative;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .input-group input {
       width: 100%;
-      padding: 14px 16px;
-      background: transparent;
-      border: 2px solid rgba(255, 255, 255, 0.4);
-      border-radius: 8px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
       color: #ffffff;
-      font-size: 1.1rem;
+      font-size: 1rem;
       outline: none;
       transition: all 0.3s ease;
-      padding-right: 50px;
+      padding-right: 45px;
     }
 
     .input-group input:focus,
     .input-group input:not(:placeholder-shown) {
-      border-color: #60a5fa;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-      transform: scale(1.02);
+      border-color: #34D399;
+      box-shadow: 0 0 8px rgba(52, 211, 153, 0.4);
+      transform: scale(1.01);
     }
 
     .input-group label {
@@ -102,31 +103,31 @@
       top: 50%;
       left: 16px;
       transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
       pointer-events: none;
       transition: all 0.3s ease;
     }
 
     .input-group input:focus + label,
     .input-group input:not(:placeholder-shown) + label {
-      top: -10px;
-      font-size: 0.8rem;
-      color: #60a5fa;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 0 6px;
-      border-radius: 4px;
+      top: -8px;
+      font-size: 0.75rem;
+      color: #34D399;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0 4px;
+      border-radius: 3px;
     }
 
     .input-group .toggle-password {
       position: absolute;
-      right: 15px;
+      right: 12px;
       top: 50%;
       transform: translateY(-50%);
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.1rem;
       cursor: pointer;
       transition: all 0.3s ease;
       display: none;
@@ -137,13 +138,13 @@
     }
 
     .input-group .toggle-password:hover {
-      color: #60a5fa;
-      transform: translateY(-50%) scale(1.3);
+      color: #34D399;
+      transform: translateY(-50%) scale(1.2);
     }
 
     .input-group .ripple {
       position: absolute;
-      background: rgba(59, 130, 246, 0.4);
+      background: rgba(52, 211, 153, 0.3);
       border-radius: 50%;
       transform: scale(0);
       animation: ripple 0.6s linear;
@@ -159,12 +160,12 @@
 
     .login-btn {
       width: 100%;
-      padding: 16px;
-      background: linear-gradient(45deg, #2563eb, #60a5fa);
+      padding: 14px;
+      background: linear-gradient(45deg, #047857, #34D399);
       border: none;
-      border-radius: 10px;
+      border-radius: 6px;
       color: #ffffff;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 600;
       cursor: pointer;
       position: relative;
@@ -179,7 +180,7 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
       transition: left 0.5s ease;
     }
 
@@ -188,14 +189,14 @@
     }
 
     .login-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(52, 211, 153, 0.3);
     }
 
     .error-message {
-      color: #f87171;
-      font-size: 0.95rem;
-      margin-top: 1.5rem;
+      color: #EF4444;
+      font-size: 0.9rem;
+      margin-top: 1rem;
       opacity: 0;
       transition: opacity 0.3s ease;
     }
@@ -206,13 +207,13 @@
 
     .toast {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #3b82f6;
+      bottom: 20px;
+      right: 20px;
+      background: #10B981;
       color: #ffffff;
-      padding: 12px 24px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      padding: 10px 20px;
+      border-radius: 6px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
       opacity: 0;
       transform: translateY(20px);
       animation: slideIn 0.5s ease forwards, slideOut 0.5s 2.5s forwards;
@@ -228,12 +229,12 @@
 
     @media (max-width: 480px) {
       .login-container {
-        padding: 2rem;
+        padding: 1.5rem;
         margin: 1rem;
       }
 
       .login-container h2 {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
       }
     }
   </style>
@@ -258,59 +259,56 @@
   </div>
 
   <script>
-    // TV signal wave animation
+    // Updated particle animation for a more modern TV signal effect
     const canvas = document.querySelector('.tv-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const waves = [];
-    class SignalWave {
+    const particles = [];
+    class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.radius = 0;
-        this.maxRadius = Math.random() * 100 + 50;
-        this.speed = Math.random() * 0.02 + 0.01;
-        this.opacity = Math.random() * 0.3 + 0.1;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = Math.random() * 2 - 1;
+        this.speedY = Math.random() * 2 - 1;
+        this.color = `rgba(16, 185, 129, ${Math.random() * 0.5 + 0.2})`;
       }
 
       update() {
-        this.radius += this.speed;
-        if (this.radius > this.maxRadius) {
-          this.radius = 0;
-          this.x = Math.random() * canvas.width;
-          this.y = Math.random() * canvas.height;
-          this.opacity = Math.random() * 0.3 + 0.1;
-        }
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+        if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
       }
 
       draw() {
+        ctx.fillStyle = this.color;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(59, 130, 246, ${this.opacity})`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
-    function initWaves() {
-      for (let i = 0; i < 15; i++) {
-        waves.push(new SignalWave());
+    function initParticles() {
+      for (let i = 0; i < 200; i++) {
+        particles.push(new Particle());
       }
     }
 
-    function animateWaves() {
+    function animateParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      waves.forEach(wave => {
-        wave.update();
-        wave.draw();
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
       });
-      requestAnimationFrame(animateWaves);
+      requestAnimationFrame(animateParticles);
     }
 
-    initWaves();
-    animateWaves();
+    initParticles();
+    animateParticles();
 
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
