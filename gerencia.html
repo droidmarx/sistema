@@ -33,6 +33,42 @@
   <script>
     const TMDB_API_KEY = 'a0830843cc828e9adb00d378f700e585';
 
+    // ===============================
+    // 🔐 Verificação do token
+    // ===============================
+    async function verifyToken() {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      try {
+        const response = await fetch('https://sistema-azure.vercel.app/api/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        });
+
+        const result = await response.json();
+
+        if (!result.valid) {
+          localStorage.removeItem('authToken');
+          window.location.href = 'index.html';
+        } else {
+          console.log('Usuário autenticado:', result.username);
+          carregarPedidos(); // ✅ Só carrega pedidos se o token for válido
+        }
+      } catch (error) {
+        console.error('Erro ao verificar token:', error);
+        localStorage.removeItem('authToken');
+        window.location.href = 'index.html';
+      }
+    }
+
+    // ===============================
+    // 📦 Função para carregar pedidos
+    // ===============================
     async function carregarPedidos() {
       const listaPedidosElement = document.getElementById('listaPedidos');
       const errorMessage = document.getElementById('errorMessage');
@@ -100,11 +136,7 @@
           html += `</div></div>`;
         }
 
-        if (html === '') {
-          html = '<p class="text-gray-500 text-center">Nenhum pedido encontrado.</p>';
-        }
-
-        listaPedidosElement.innerHTML = html;
+        listaPedidosElement.innerHTML = html || '<p class="text-gray-500 text-center">Nenhum pedido encontrado.</p>';
         errorMessage.classList.add('hidden');
 
       } catch (error) {
@@ -114,63 +146,18 @@
       }
     }
 
-    async function excluirPedido(clientId, pedidoId) {
-      if (!confirm('Tem certeza que deseja excluir este pedido?')) return;
-
-      try {
-        const response = await fetch(`https://66d39f5c184dce1713d09736.mockapi.io/Api/v1/clientes/${clientId}`);
-        const clientData = await response.json();
-        const pedidos = clientData.pedidos || [];
-        const novosPedidos = pedidos.filter(p => p.id !== pedidoId);
-        clientData.pedidos = novosPedidos;
-
-        const updateResponse = await fetch(`https://66d39f5c184dce1713d09736.mockapi.io/Api/v1/clientes/${clientId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(clientData)
-        });
-
-        if (updateResponse.ok) {
-          carregarPedidos();
-        } else {
-          alert('Erro ao excluir pedido.');
-        }
-
-      } catch (error) {
-        console.error('Erro ao excluir pedido:', error);
-        alert('Erro ao excluir pedido.');
-      }
-    }
-
-    async function verifyToken() {
-  const token = localStorage.getItem('authToken');
-  if (!token) {
-    window.location.href = 'index.html';
-    return;
-  }
-
-  try {
-    const response = await fetch('https://sistema-azure.vercel.app/api/verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token })
-    });
-
-    const result = await response.json();
-    if (!result.valid) {
+    // ===============================
+    // ❌ Logout
+    // ===============================
+    document.getElementById('logoutB').addEventListener('click', () => {
       localStorage.removeItem('authToken');
       window.location.href = 'index.html';
-    } else {
-      console.log('Usuário autenticado:', result.username);
-    }
-  } catch (error) {
-    console.error('Erro ao verificar token:', error);
-    localStorage.removeItem('authToken');
-    window.location.href = 'index.html';
-  }
-}
+    });
 
-verifyToken();
+    // ===============================
+    // 🚀 Iniciar página
+    // ===============================
+    verifyToken();
   </script>
 </body>
 </html>
