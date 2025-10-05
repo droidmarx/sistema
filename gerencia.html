@@ -143,45 +143,34 @@
     }
 
     async function verifyToken() {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        window.location.href = 'index.html';
-        return;
-      }
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    window.location.href = 'index.html';
+    return;
+  }
 
-      try {
-        const response = await fetch('https://seu-projeto.vercel.app/api/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token })
-        });
+  try {
+    const response = await fetch('https://sistema-azure.vercel.app/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
 
-        const result = await response.json();
-        console.log('Verificação de token:', result);
-
-        if (!result.valid) {
-          localStorage.removeItem('authToken');
-          window.location.href = 'index.html';
-        }
-      } catch (error) {
-        console.error('Erro ao verificar token:', error);
-        localStorage.removeItem('authToken');
-        window.location.href = 'index.html';
-      }
+    const result = await response.json();
+    if (!result.valid) {
+      localStorage.removeItem('authToken');
+      window.location.href = 'index.html';
+    } else {
+      console.log('Usuário autenticado:', result.username);
     }
+  } catch (error) {
+    console.error('Erro ao verificar token:', error);
+    localStorage.removeItem('authToken');
+    window.location.href = 'index.html';
+  }
+}
 
-    window.onload = function() {
-      verifyToken();
-      carregarPedidos();
-
-      const logoutBtn = document.getElementById('logoutB');
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-          localStorage.removeItem('authToken');
-          window.location.href = 'index.html';
-        });
-      }
-    };
+verifyToken();
   </script>
 </body>
 </html>
