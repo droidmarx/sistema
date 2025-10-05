@@ -6,8 +6,7 @@
     <title>Sistema</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<style>
-    :root {
+<style>:root {
     --primary-color: #007bff;
     --primary-hover: #0056b3;
     --bg-color: #fff;
@@ -29,6 +28,8 @@
     --modal-header-bg: linear-gradient(135deg, #007bff, #00d4ff);
     --panel-modal-header-bg: linear-gradient(135deg, #6f42c1, #9b59b6);
     --messages-modal-header-bg: linear-gradient(135deg, #0052cc, #4682ff);
+    --gerencia-btn-color: #6c757d; /* Cor para o botão Gerenciar (cinza escuro) */
+    --gerencia-btn-hover: #5a6268; /* Cor para hover do botão Gerenciar */
 }
 
 [data-theme="dark"] {
@@ -50,6 +51,8 @@
     --modal-header-bg: linear-gradient(135deg, #4a90e2, #6ab0ff);
     --panel-modal-header-bg: linear-gradient(135deg, #5a32a3, #7d4bc8);
     --messages-modal-header-bg: linear-gradient(135deg, #4682ff, #6a9bff);
+    --gerencia-btn-color: #adb5bd; /* Cor para o botão Gerenciar no tema escuro */
+    --gerencia-btn-hover: #868e96; /* Cor para hover no tema escuro */
 }
 
 body {
@@ -624,7 +627,7 @@ body {
     flex-wrap: wrap;
 }
 
-#new-client-btn, #panel-manager-btn, #whatsapp-messages-btn {
+#new-client-btn, #panel-manager-btn, #whatsapp-messages-btn, #gerencia-btn {
     padding: 15px 40px;
     border: none;
     border-radius: 5px;
@@ -662,6 +665,14 @@ body {
 
 #whatsapp-messages-btn:hover {
     background-color: var(--messages-btn-hover);
+}
+
+#gerencia-btn {
+    background-color: var(--gerencia-btn-color);
+}
+
+#gerencia-btn:hover {
+    background-color: var(--gerencia-btn-hover);
 }
 
 .toast {
@@ -717,7 +728,7 @@ body {
         padding-left: 35px;
     }
 
-    #new-client-btn, #panel-manager-btn, #whatsapp-messages-btn {
+    #new-client-btn, #panel-manager-btn, #whatsapp-messages-btn, #gerencia-btn {
         width: 90%;
         padding: 12px 20px;
         font-size: 1em;
@@ -817,8 +828,7 @@ body {
 .panel-item span {
     width: 300px;
     font-size: 1;
-}
-</style>
+}</style>
 <body>
     <div class="container">
         <div class="top-right-actions">
@@ -845,10 +855,11 @@ body {
             </div>
         </div>
 
-        <div class="top-actions">
+         <div class="top-actions">
             <button id="new-client-btn"><i class="fas fa-user-plus"></i> Novo Cliente</button>
             <button id="panel-manager-btn" onclick="openPanelManager()"><i class="fas fa-cogs"></i> Gerenciar Painéis</button>
             <button id="whatsapp-messages-btn" onclick="openWhatsAppMessagesModal()"><i class="fab fa-whatsapp"></i> Configurar Mensagens</button>
+            <button id="gerencia-btn" onclick="window.location.href='pagar.html'"><i class="fa-brands fa-youtube"></i> Gerência de pedidos</button>
         </div>
 
         <div id="filters">
