@@ -5,24 +5,25 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const { token } = req.body;
-
-  if (!token) {
-    return res.status(401).json({ valid: false, error: 'Token não fornecido' });
-  }
-
   try {
-    // Verifica o token usando a chave secreta
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ valid: false, error: 'Token não fornecido' });
+    }
+
+    const token = authHeader.substring(7);
+    
+    // Verificar o token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Retorna valid: true e os dados do payload (username e fullName)
-    return res.status(200).json({
-      valid: true,
-      username: decoded.username,
-      fullName: decoded.fullName
+    // Token é válido
+    return res.status(200).json({ 
+      valid: true, 
+      username: decoded.username, 
+      fullName: decoded.fullName 
     });
+
   } catch (error) {
-    console.error('Erro ao verificar token:', error);
-    return res.status(401).json({ valid: false, error: 'Token inválido ou expirado' });
+    return res.status(401).json({ valid: false, error: 'Token inválido' });
   }
 };
