@@ -3,9 +3,6 @@
   "routes": [
     { "src": "/api/auth", "dest": "/api/auth.js" },
     { "src": "/api/verify", "dest": "/api/verify.js" },
-    { "src": "/sistema.html", "dest": "/sistema.html" },
-    { "src": "/pagar.html", "dest": "/pagar.html" },
-    { "src": "/filme.html", "dest": "/filme.html" },
     { "src": "/estilos.css", "dest": "/estilos.css" },
     { "src": "/script.js", "dest": "/script.js" },
     { "src": "/(.*)", "dest": "/index.html" }
